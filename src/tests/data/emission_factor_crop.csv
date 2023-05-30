@@ -1,0 +1,3 @@
+ef_country,ef_emissions_factor_1_ipcc_2019,ef_urea,ef_urea_and_nbpt,ef_fracGASF_urea_fertilisers_to_nh3_and_nox,ef_fracGASF_urea_and_nbpt_to_nh3_and_nox,ef_frac_leach_runoff,ef_ammonium_nitrate,ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox,ef_indirect_n2o_atmospheric_deposition_to_soils_and_water,ef_indirect_n2o_from_leaching_and_runoff,ef_grassland_dm_t,ef_dm_carbon_stock_crops,ef_Frac_P_Leach
+ireland,0.01,0.0025,0.004,0.45,0.09675,0.1,0.014,0.02,0.01,0.011,13.6,5,0.03
+costa rica,0.01,0.0025,0.004,0.45,0.09675,0.1,0.01,0.02,0.01,0.011,13.6,5,0.03
