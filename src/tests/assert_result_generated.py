@@ -61,5 +61,5 @@ class DatasetLoadingTestCase(unittest.TestCase):
             "No result generated for Urea CO2 emmissions",
         )
 
-if __name__ == "__main__":
-    unittest.main()
+    if __name__ == "__main__":
+        unittest.main()
