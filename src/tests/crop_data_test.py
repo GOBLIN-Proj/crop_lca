@@ -1,7 +1,7 @@
 import unittest
 import pandas as pd
 import os
-from crop_lca.crop_model import load_crop_farm_data, print_crop_data, print_crop_data_test
+from crop_lca.models import load_crop_farm_data, print_crop_data, print_crop_data_test
 import io
 from contextlib import redirect_stdout
 
@@ -41,12 +41,12 @@ class DatasetLoadingTestCase(unittest.TestCase):
 
     def test_output_crop(self):
         data = load_crop_farm_data(self.data_frame)
-        print(print_crop_data_test(data))
-        output = capture_stdout(print_crop_data_test, data)
+        print(print_crop_data(data))
+        output = capture_stdout(print_crop_data, data)
 
         # Validate the output
         expected_output = read_expected_output("crop.txt", self.txt_path)
-        #self.assertEqual(output.strip(), expected_output.strip())
+        self.assertEqual(output.strip(), expected_output.strip())
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ import unittest
 import pandas as pd
 import os
 
-from crop_lca.crop_model import (
+from crop_lca.models import (
     CropChars,
     Upstream,
     Emissions_Factors,
