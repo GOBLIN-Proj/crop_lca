@@ -497,7 +497,6 @@ class FertilserUse:
 
         return total_fert_k
 
-
 ########################################################################################################
 # Urea Fertiliser Emissions
 ########################################################################################################
@@ -765,17 +764,17 @@ class FertiliserInputs:
 class Upstream:
     def __init__(self, ef_country):
         self.loader_class = Loader(ef_country)
-        self.fertiliser_use_class = FertilserUse()
+        self.fertiliser_use_class = FertilserUse(ef_country)
 
 
-    def fert_upstream_P(self, data, urea_proportion):
+    def fert_upstream_po4(self, data, urea_proportion):
 
         """
         this function returns the upstream emissions from urea and ammonium fertiliser manufature
         """
         AN_fert_PO4 = self.loader_class.upstream.get_upstream_kg_po4e(
             "ammonium_nitrate_fertiliser"
-        )  # Ammonium Nitrate Fertiliser
+        )  
         Urea_fert_PO4 = self.loader_class.upstream.get_upstream_kg_po4e("urea_fert")
         Triple_superphosphate = self.loader_class.upstream.get_upstream_kg_po4e("triple_superphosphate")
         Potassium_chloride = self.loader_class.upstream.get_upstream_kg_po4e("potassium_chloride")
@@ -792,6 +791,79 @@ class Upstream:
             + (total_k_fert * Potassium_chloride)
         )
 
+    def fert_upstream_co2(self, data, urea_proportion):
+
+        """
+        this function returns the upstream emissions from urea and ammonium fertiliser manufature
+        """
+        AN_fert_CO2 = self.loader_class.upstream.get_upstream_kg_co2e(
+            "ammonium_nitrate_fertiliser"
+        )  
+        Urea_fert_CO2 = self.loader_class.upstream.get_upstream_kg_co2e("urea_fert")
+        Triple_superphosphate = self.loader_class.upstream.get_upstream_kg_co2e("triple_superphosphate")
+        Potassium_chloride = self.loader_class.upstream.get_upstream_kg_co2e("potassium_chloride")
+
+        total_n_fert = self.fertiliser_use_class.total_an_fert_use(data, urea_proportion)
+        total_p_fert = self.fertiliser_use_class.total_p_fert_use(data)
+        total_k_fert = self.fertiliser_use_class.total_k_fert_use(data)
+        total_urea = self.fertiliser_use_class.total_urea_fert_use(data, urea_proportion)
+
+
+        return (
+            (total_n_fert * AN_fert_CO2)
+            + (total_urea * Urea_fert_CO2)
+            + (total_p_fert * Triple_superphosphate)
+            + (total_k_fert * Potassium_chloride)
+        )
+    
+    def diesel_CO2(self, diesel_kg):
+
+        """
+        this function returns the direct and indirect upstream CO2 emmisions from diesel
+        """
+
+        Diesel_indir = self.loader_class.upstream.get_upstream_kg_co2e("diesel_indirect")
+        Diest_dir = self.loader_class.upstream.get_upstream_kg_co2e("diesel_direct")
+
+        return diesel_kg * (Diest_dir + Diesel_indir)
+    
+
+    def diesel_PO4(self, diesel_kg):
+        """
+        this function returns the direct and indirect upstream PO4 emmisions from diesel
+        """
+
+        Diesel_indir = self.loader_class.upstream.get_upstream_kg_po4e(
+            "diesel_indirect"
+        )
+        Diest_dir = self.loader_class.upstream.get_upstream_kg_po4e("diesel_direct")
+
+        return diesel_kg * (Diest_dir + Diesel_indir)
+    
+
+    def elec_CO2(self, elec_kwh):
+
+        """
+        this functino returns the upstream CO2 emissions from electricity consumption
+        """
+
+        elec_consumption = self.loader_class.upstream.get_upstream_kg_co2e(
+            "electricity_consumed"
+        )  # based on Norway hydropower
+        return elec_kwh * elec_consumption
+
+
+    def elec_PO4(self, elec_kwh):
+        """
+        this functino returns the upstream CO2 emissions from electricity consumption
+        """
+
+        elec_consumption = self.loader_class.upstream.get_upstream_kg_po4e(
+            "electricity_consumed"
+        )  # based on Norway hydropower
+        return elec_kwh * elec_consumption
+    
+
 ################################################################################
 # Total Global Warming Potential of whole farms
 ################################################################################
@@ -801,6 +873,8 @@ class ClimateChangeTotals:
         self.residues_class = Residues(ef_country)
         self.fertiliser_emissions_class = FertiliserInputs(ef_country)
         self.fertiliser_use_class = FertilserUse(ef_country)
+        self.upstream_class = Upstream(ef_country)
+
 
     def create_emissions_dictionary(self, keys):
         crop_key_list = [
@@ -820,7 +894,28 @@ class ClimateChangeTotals:
             for inner_k in crop_keys_dict.keys():
                 crop_emissions_dict[key][inner_k] = 0
 
+
+    def create_extended_emissions_dictionary(self, keys):
+        crop_key_list = [
+            "crop_residue_direct",
+            "N_direct_fertiliser",
+            "N_indirect_fertiliser",
+            "soils_CO2",
+            "soils_N2O",
+            "upstream"
+        ]
+
+        crop_keys_dict = dict.fromkeys(keys)
+
+        crop_emissions_dict = dict.fromkeys(crop_key_list)
+
+        for key in crop_emissions_dict.keys():
+            crop_emissions_dict[key] = copy.deepcopy(crop_keys_dict)
+            for inner_k in crop_keys_dict.keys():
+                crop_emissions_dict[key][inner_k] = 0
+
         return crop_emissions_dict
+    
     
     #######################################################################################################
     # Total  N from All crops
@@ -908,6 +1003,20 @@ class ClimateChangeTotals:
         )  # adjusted to the NIR version of this calculation
     
 
+    def upstream_and_inputs_and_fuel_co2(
+        self,
+        data,
+        urea_proportion,
+        diesel_kg,
+        elec_kwh,
+    ):
+        return (
+            self.upstream_class.diesel_CO2(diesel_kg)
+            + self.upstream_class.elec_CO2(elec_kwh)
+            + self.upstream_class.fert_upstream_co2(data, urea_proportion
+            ))
+    
+
 ###############################################################################
 # Water Quality EP PO4e
 ###############################################################################
@@ -918,6 +1027,40 @@ class EutrophicationTotals:
         self.residues_class = Residues(ef_country)
         self.fertiliser_emissions_class = FertiliserInputs(ef_country)
         self.upstream_class = Upstream(ef_country)
+
+    def create_emissions_dictionary(self, keys):
+        crop_key_list = [
+            "soils",
+        ]
+
+        crop_keys_dict = dict.fromkeys(keys)
+
+        crop_emissions_dict = dict.fromkeys(crop_key_list)
+
+        for key in crop_emissions_dict.keys():
+            crop_emissions_dict[key] = copy.deepcopy(crop_keys_dict)
+            for inner_k in crop_keys_dict.keys():
+                crop_emissions_dict[key][inner_k] = 0
+        
+        return crop_emissions_dict
+
+
+    def create_extended_emissions_dictionary(self, keys):
+        crop_key_list = [
+            "soils",
+            "upstream"
+        ]
+
+        crop_keys_dict = dict.fromkeys(keys)
+
+        crop_emissions_dict = dict.fromkeys(crop_key_list)
+
+        for key in crop_emissions_dict.keys():
+            crop_emissions_dict[key] = copy.deepcopy(crop_keys_dict)
+            for inner_k in crop_keys_dict.keys():
+                crop_emissions_dict[key][inner_k] = 0
+
+        return crop_emissions_dict
 
     # SOILS
     def total_soils_NH3_and_LEACH_EP(
@@ -993,12 +1136,18 @@ class EutrophicationTotals:
         )
 
 
-
-    def upstream_EP(self, data, urea_proportion):
-
-        return self.upstream_class.fert_upstream_P( data, urea_proportion)
-
-
+    def upstream_and_inputs_and_fuel_po4(
+        self,
+        data,
+        urea_proportion,
+        diesel_kg,
+        elec_kwh,
+    ):
+        return (
+            self.upstream_class.diesel_PO4(diesel_kg)
+            + self.upstream_class.elec_PO4(elec_kwh)
+            + self.upstream_class.fert_upstream_po4(data, urea_proportion
+            ))
 ###############################################################################
 # Air Quality
 ###############################################################################
@@ -1008,6 +1157,23 @@ class AirQualityTotals:
         self.fertiliser_emissions_class = FertiliserInputs(ef_country)
 
 
+    def create_emissions_dictionary(self, keys):
+        crop_key_list = [
+            "soils",
+        ]
+
+        crop_keys_dict = dict.fromkeys(keys)
+
+        crop_emissions_dict = dict.fromkeys(crop_key_list)
+
+        for key in crop_emissions_dict.keys():
+            crop_emissions_dict[key] = copy.deepcopy(crop_keys_dict)
+            for inner_k in crop_keys_dict.keys():
+                crop_emissions_dict[key][inner_k] = 0
+
+        return crop_emissions_dict
+    
+    
 # SOILS
     def total_soils_NH3_AQ(
         self,

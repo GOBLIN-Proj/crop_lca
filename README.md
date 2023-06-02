@@ -25,7 +25,7 @@ When prompted enter your ```<username>``` and password, which is your ```<access
 
 
 ```bash
-pip install "geo_goblin@git+https://github.com/colmduff/sheep_lca.git@main" 
+pip install "crop_lca@git+https://github.com/colmduff/crop_lca.git@main" 
 
 ```
 

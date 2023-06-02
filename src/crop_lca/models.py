@@ -29,9 +29,9 @@ class CropCollection(DynamicData):
 
 
 class Farm(DynamicData):
-    def __init__(self, data, crop_collections):
+    def __init__(self, data):#, crop_collections):
 
-        self.crops = crop_collections.get(data.get("farm_id"))
+        #self.crops = crop_collections.get(data.get("farm_id"))
 
         super(Farm, self).__init__(data)
 
@@ -240,7 +240,7 @@ class Upstream(object):
             upstream_mje = row.get("upstream_mje")
             upstream_kg_sbe = row.get("upstream_kg_sbe")
 
-            self.upstream = {
+            self.upstream[upstream_type] = {
                 "upstream_fu": upstream_fu,
                 "upstream_kg_co2e": upstream_kg_co2e,
                 "upstream_kg_po4e": upstream_kg_po4e,
@@ -249,23 +249,23 @@ class Upstream(object):
                 "upstream_kg_sbe": upstream_kg_sbe,
             }
 
-    def get_upstream_fu(self):
-        return self.upstream.get("upstream_fu")
+    def get_upstream_fu(self, upstream_type):
+        return self.upstream.get(upstream_type).get("upstream_fu")
 
-    def get_upstream_kg_co2e(self):
-        return self.upstream.get("upstream_kg_co2e")
+    def get_upstream_kg_co2e(self, upstream_type):
+        return self.upstream.get(upstream_type).get("upstream_kg_co2e")
 
-    def get_upstream_kg_po4e(self):
-        return self.upstream.get("upstream_kg_po4e")
+    def get_upstream_kg_po4e(self, upstream_type):
+        return self.upstream.get(upstream_type).get("upstream_kg_po4e")
 
-    def get_upstream_kg_so2e(self):
-        return self.upstream.get("upstream_kg_so2e")
+    def get_upstream_kg_so2e(self, upstream_type):
+        return self.upstream.get(upstream_type).get("upstream_kg_so2e")
 
-    def get_upstream_mje(self):
-        return self.upstream.get("upstream_mje")
+    def get_upstream_mje(self, upstream_type):
+        return self.upstream.get(upstream_type).get("upstream_mje")
 
-    def get_upstream_kg_sbe(self):
-        return self.upstream.get("upstream_kg_sbe")
+    def get_upstream_kg_sbe(self, upstream_type):
+        return self.upstream.get(upstream_type).get("upstream_kg_sbe")
 
     def is_loaded(self):
         if self.data_frame is not None:
@@ -354,24 +354,25 @@ def load_crop_farm_data(crop_type_dataframe):
 
 def load_farm_data(farm_data_frame):
     subset = [
-        "total_urea",
-        "total_urea_abated",
-        "total_n_fert",
-        "total_p_fert",
-        "total_k_fert",
         "diesel_kg",
         "elec_kwh",
     ]
     farm_data_frame.drop_duplicates(subset=subset, keep="first", inplace=True)
 
     scenario_list = []
-
+    keys = []
     for _, row in farm_data_frame.iterrows():
         data = dict([(x, row.get(x)) for x in row.keys()])
         scenario_list.append(Farm(data))
+        #keys.append(row.get("farm_id"))
 
-    return dict(enumerate(scenario_list))
+    #collections ={}
 
+    #for _, sc in scenario_list:
+        #collections[sc] = scenario_list[sc]
+
+    #return dict(enumerate(scenario_list))
+    return dict([(x.farm_id, x) for x in scenario_list])
 ####################################################################################################
 # Load Additional Databases
 ####################################################################################################
