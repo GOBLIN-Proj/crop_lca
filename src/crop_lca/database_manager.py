@@ -5,10 +5,10 @@ import os
 
 
 class DataManager:
-    def __init__(self, ef_country):
+    def __init__(self, ef_country=None):
         self.database_dir = get_local_dir()
         self.engine = self.data_engine_creater()
-        self.ef_country = ef_country
+        self.ef_country = ef_country if ef_country else None
 
     def data_engine_creater(self):
         database_path = os.path.abspath(
@@ -78,5 +78,23 @@ class DataManager:
                 self.engine,
                 index_col=[index],
             )
+
+        return dataframe
+    
+
+    def cso_crop_data(self, index=None):
+        table = "cso_crop_production_data"
+
+        if index == None:
+            dataframe = pd.read_sql("SELECT * FROM '%s'" % (table), self.engine)
+
+        else:
+            dataframe = pd.read_sql(
+                "SELECT * FROM '%s'" % (table),
+                self.engine,
+                index_col=["Year"],
+            )
+
+        dataframe["total_prod_000"] *= 1000
 
         return dataframe

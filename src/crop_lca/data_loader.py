@@ -8,8 +8,8 @@ from crop_lca.models import (
 
 
 class Loader:
-    def __init__(self, ef_country):
-        self.ef_country = ef_country
+    def __init__(self, ef_country = None):
+        self.ef_country = ef_country if ef_country else None
         self.dataframes = DataManager(ef_country)
         self.crop_chars = self.get_crop_chars()
         self.fertiliser = self.get_fertiliser()
@@ -27,3 +27,6 @@ class Loader:
 
     def get_upstream(self):
         return Upstream(self.dataframes.upstream_data())
+    
+    def get_national_crop_production(self):
+        return self.dataframes.cso_crop_data()

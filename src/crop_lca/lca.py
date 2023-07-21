@@ -322,59 +322,40 @@ class Residues:
             "grass_clover_mix": self.loader_class.crop_chars.get_crop_intercept("grass_clover_mix"),
         }
 
-        test_value = lambda x: True if (x > 0) else False
 
         Crop_t = dry_matter_fraction.get(data.crop_type)
+        if Crop_t is None:
+            Crop_t = dry_matter_fraction.get("crops")
 
-        Crop_t_output = 0
-
-        if test_value(Crop_t) == True:
-            Crop_t_output = Crop_t
-        else:
-            Crop_t_output = self.loader_class.crop_chars.get_crop_dry_matter("crops")
+        Crop_t_output = self.loader_class.crop_chars.get_crop_dry_matter("crops")
 
         AG_dm = Rag.get(data.crop_type)
+        if AG_dm is None:
+            AG_dm = Rag.get("crops")
 
-        AG_dm_output = 0
-
-        if test_value(AG_dm) == True:
-            AG_dm_output = Crop_t_output * AG_dm
-        else:
-            AG_dm_output = (
-                Crop_t_output
-                * self.loader_class.crop_chars.get_crop_above_ground_residue_dry_matter_to_harvested_yield(
-                    "crops"
-                )
-            )
+        AG_dm_output = Crop_t_output * AG_dm
 
         ratio_below_ground = RS.get(data.crop_type)
+        if ratio_below_ground is None:
+            ratio_below_ground = RS.get("crops")
 
-        ratio_below_ground_output = 0
-
-        if test_value(ratio_below_ground) == True:
-            ratio_below_ground_output = ratio_below_ground
-        else:
-            ratio_below_ground_output = (
-                self.loader_class.crop_chars.get_crop_below_ground_ratio_to_above_ground_biomass("crops")
-            )
+        ratio_below_ground_output = ratio_below_ground
 
         NAG = crops_n_above.get(data.crop_type)
 
+        if NAG is None:
+            NAG = crops_n_above.get("crops")
+
         NAG_output = 0
 
-        if test_value(NAG) == True:
-            NAG_output = NAG
-        else:
-            NAG_output = self.loader_class.crop_chars.get_crop_n_content_of_above_ground_residues("crops")
+        NAG_output = NAG
 
         NBG = crops_n_below.get(data.crop_type)
 
-        NBG_output = 0
+        if NBG is None:
+            NBG = crops_n_below.get("crops")
 
-        if test_value(NAG) == True:
-            NBG_output = NBG
-        else:
-            NBG_output = self.loader_class.crop_chars.get_crop_n_content_below_ground("crops")
+        NBG_output = NBG
 
         FracRemove = 0.95
 
@@ -893,6 +874,8 @@ class ClimateChangeTotals:
             crop_emissions_dict[key] = copy.deepcopy(crop_keys_dict)
             for inner_k in crop_keys_dict.keys():
                 crop_emissions_dict[key][inner_k] = 0
+
+        return crop_emissions_dict
 
 
     def create_extended_emissions_dictionary(self, keys):

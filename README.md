@@ -34,6 +34,7 @@ pip install "crop_lca@git+https://github.com/colmduff/crop_lca.git@main"
 import pandas as pd
 from crop_lca.models import load_crop_farm_data
 from crop_lca.lca import ClimateChangeTotals
+from crop_lca.national_crop_production import NationalCropData
 
 
 def main():
@@ -41,20 +42,12 @@ def main():
     climatechange = ClimateChangeTotals("ireland")
 
     # Create a dictionary to store results
-    index = "2020"
+    index = 2020
     crop_emissions_dict = climatechange.create_emissions_dictionary([index])
 
     # Create some data to generate results
-
-    data = {
-        'ef_country': ['ireland', 'ireland', 'ireland', 'ireland', 'ireland'],
-        'farm_id': ['2020', '2020', '2020', '2020', '2020'],
-        'year': ['2020', '2020', '2020', '2020', '2020'],
-        'crop_type': ['barley', 'crops', 'maize', 'spring_wheat', 'winter_wheat'],
-        'kg_dm_per_ha': [7.289189, 3.86546, 7.125387, 8.968263, 8.968263],
-        'area': [5557.922952642, 200.003617085, 1299.493637777, 1634.363389845, 1634.363389845]
-    }
-
+    data = NationalCropData.gen_national_crop_production_dataframe(index)
+    
     data_frame = pd.DataFrame(data)
 
     #proportion of fertiliser inputs that is urea
@@ -103,6 +96,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 ```
 ## License
 This project is licensed under the terms of the MIT license.

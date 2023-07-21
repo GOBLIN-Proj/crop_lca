@@ -1,3 +1,4 @@
+
 """
     Container classes for data loaded from files
 """
@@ -403,3 +404,4 @@ def print_crop_data(data):
                     print(
                         f"{crop}: {attribute} = {data[key].__getitem__(crops).__getattribute__(crop).__getattribute__(attribute)}"
                     )
+
