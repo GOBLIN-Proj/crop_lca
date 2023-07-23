@@ -298,13 +298,25 @@ class Fertiliser(object):
             }
 
     def get_fert_kg_n_per_ha(self, fert_crop_type):
-        return self.fertiliser.get(fert_crop_type).get("fert_kg_n_per_ha")
+        crop = self.fertiliser.get(fert_crop_type)
+        if crop is None:
+            return self.fertiliser.get("average").get("fert_kg_n_per_ha")
+        return crop.get("fert_kg_n_per_ha")
+    
 
     def get_fert_kg_p_per_ha(self, fert_crop_type):
-        return self.fertiliser.get(fert_crop_type).get("fert_kg_p_per_ha")
+        crop = self.fertiliser.get(fert_crop_type)
+        if crop is None:
+            return self.fertiliser.get("average").get("fert_kg_p_per_ha")
+        return crop.get("fert_kg_p_per_ha")
+    
 
     def get_fert_kg_k_per_ha(self, fert_crop_type):
-        return self.fertiliser.get(fert_crop_type).get("fert_kg_k_per_ha")
+        crop = self.fertiliser.get(fert_crop_type)
+        if crop is None:
+            return self.fertiliser.get("average").get("fert_kg_k_per_ha")
+        return crop.get("fert_kg_k_per_ha")
+    
 
     def is_loaded(self):
         if self.data_frame is not None:
