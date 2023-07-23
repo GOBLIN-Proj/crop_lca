@@ -63,7 +63,7 @@ class NationalCropData:
         return pd.concat([national_crop_df, scenario_crop_dataframe], ignore_index=True) 
 
     @classmethod
-    def gen_farm_data(cls, crop_dataframe, urea_proportion, urea_abated_proportion):
+    def gen_farm_data(cls, crop_dataframe, urea_proportion, default_urea, default_urea_abated):
 
         loader_class = Loader()
 
@@ -94,18 +94,27 @@ class NationalCropData:
             farm_data.at[sc, "total_k_fert"] = 0
 
             for crop in crop_dataframe.crop_type.unique():
+
+                try:    
+                    urea_value = urea_proportion.loc[sc, "Urea proportion"].item()
+
+                    urea_abated_value = urea_proportion.loc[sc, "Urea abated proportion"].item()
                 
+                except KeyError:
+                    urea_value = default_urea
+                    urea_abated_value = default_urea_abated
+
 
                 mask = ((crop_dataframe["farm_id"]== sc) & (crop_dataframe["crop_type"]==crop))
 
                 farm_data.at[sc, "total_urea"] += crop_dataframe.loc[mask, "area"].item() *(application_rate.get_fert_kg_n_per_ha(crop)
-                        * urea_proportion)
+                        * urea_value)
 
                 farm_data.at[sc, "total_urea_abated"] += crop_dataframe.loc[mask, "area"].item() * (crop_dataframe.loc[mask, "area"].item() * (application_rate.get_fert_kg_n_per_ha(crop)
-                        * urea_proportion * urea_abated_proportion))
+                        * urea_value * urea_abated_value))
 
                 farm_data.at[sc, "total_n_fert"] += crop_dataframe.loc[mask, "area"].item() *(application_rate.get_fert_kg_n_per_ha(crop)
-                        * (1 -urea_proportion))
+                        * (1 -urea_value))
                 
                 farm_data.at[sc, "total_p_fert"] += crop_dataframe.loc[mask, "area"].item() * application_rate.get_fert_kg_p_per_ha(crop)
                 farm_data.at[sc, "total_k_fert"] += crop_dataframe.loc[mask, "area"].item() * application_rate.get_fert_kg_k_per_ha(crop)
