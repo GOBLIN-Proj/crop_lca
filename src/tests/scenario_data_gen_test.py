@@ -23,6 +23,7 @@ def main():
     farm_data = NationalCropData.gen_farm_data(df, fert, 0.2, 0)
 
     print(farm_data)
+    print(df)
 
 if __name__ == "__main__":
     main()

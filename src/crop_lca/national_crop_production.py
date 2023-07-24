@@ -24,7 +24,7 @@ class NationalCropData:
             national_crop_df.loc[index, "year"] = year
             national_crop_df.loc[index, "crop_type"] = crop
             national_crop_df.loc[index, "kg_dm_per_ha"]  = cso_crops.loc[mask, "yield_t_per_ha"].item()
-            national_crop_df.loc[index, "area"]  = cso_crops.loc[mask, "total_prod_000"].item()
+            national_crop_df.loc[index, "area"]  = cso_crops.loc[mask, "Hectares_000"].item()
 
             index += 1
 
@@ -37,7 +37,6 @@ class NationalCropData:
         loader_class = Loader()
 
         cso_crops = loader_class.get_national_crop_production()
-
 
         if crop_dataframe is None:
             national_crop_df = NationalCropData.gen_national_crop_production_dataframe(calibration_year)
