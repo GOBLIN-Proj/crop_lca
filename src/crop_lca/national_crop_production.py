@@ -55,7 +55,7 @@ class NationalCropData:
             scenario_crop_dataframe.loc[index, "year"] = target_year
             scenario_crop_dataframe.loc[index, "crop_type"] = crop
             scenario_crop_dataframe.loc[index, "kg_dm_per_ha"]  = cso_crops.loc[mask, "yield_t_per_ha"].item()
-            scenario_crop_dataframe.loc[index, "area"]  = cso_crops.loc[mask, "total_prod_000"].item()
+            scenario_crop_dataframe.loc[index, "area"]  = cso_crops.loc[mask, "Hectares_000"].item()
 
             index += 1
 

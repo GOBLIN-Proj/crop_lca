@@ -95,6 +95,6 @@ class DataManager:
                 index_col=["Year"],
             )
 
-        dataframe["total_prod_000"] *= 1000
+        dataframe["Hectares_000"] *= 1000
 
         return dataframe
