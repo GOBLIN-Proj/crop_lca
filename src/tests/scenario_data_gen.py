@@ -4,11 +4,11 @@ import pandas as pd
 def main():
     scenarios = list(range(3))
 
-    print(scenarios)
-
     calibration_year = 2020
     target_year = 2050 
 
+    df = None 
+    
     for sc in scenarios:
         if sc > 0:
             df = NationalCropData.gen_scenario_crop_production_dataframe(calibration_year, target_year, sc, df)
@@ -22,8 +22,6 @@ def main():
 
     farm_data = NationalCropData.gen_farm_data(df, fert, 0.2, 0)
 
-    print(farm_data)
-    print(df)
 
 if __name__ == "__main__":
     main()
