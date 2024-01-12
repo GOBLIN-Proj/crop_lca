@@ -95,7 +95,7 @@ class NationalCropData:
             for crop in crop_dataframe.crop_type.unique():
 
                 try:
-                    print(f"sc: {sc}, urea_proportion: {urea_proportion}")
+                    print(f"sc: {sc}, urea_proportion: {urea_proportion.loc[sc, 'Urea proportion']}")
                     urea_value = urea_proportion.loc[sc, "Urea proportion"].item()
 
                     urea_abated_value = urea_proportion.loc[sc, "Urea abated proportion"].item()
