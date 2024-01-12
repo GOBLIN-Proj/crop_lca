@@ -94,10 +94,10 @@ class NationalCropData:
 
             for crop in crop_dataframe.crop_type.unique():
 
-                try:    
-                    urea_value = urea_proportion.loc[sc, "Urea proportion"].item()
+                try:
+                    urea_value = urea_proportion.at[sc, "Urea proportion"]
 
-                    urea_abated_value = urea_proportion.loc[sc, "Urea abated proportion"].item()
+                    urea_abated_value = urea_proportion.at[sc, "Urea abated proportion"]
                 
                 except KeyError:
                     urea_value = default_urea
