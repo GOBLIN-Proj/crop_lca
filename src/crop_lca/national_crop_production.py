@@ -96,9 +96,9 @@ class NationalCropData:
 
                 try:
                     print(f"sc: {sc}, urea_proportion: {urea_proportion.loc[sc, 'Urea proportion']}")
-                    urea_value = urea_proportion.loc[sc, "Urea proportion"].item()
+                    urea_value = urea_proportion.at[sc, "Urea proportion"]
 
-                    urea_abated_value = urea_proportion.loc[sc, "Urea abated proportion"].item()
+                    urea_abated_value = urea_proportion.at[sc, "Urea abated proportion"]
                 
                 except KeyError:
                     urea_value = default_urea
