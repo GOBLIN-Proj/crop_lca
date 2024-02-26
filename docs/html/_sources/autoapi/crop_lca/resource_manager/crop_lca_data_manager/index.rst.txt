@@ -1,0 +1,48 @@
+:py:mod:`crop_lca.resource_manager.crop_lca_data_manager`
+=========================================================
+
+.. py:module:: crop_lca.resource_manager.crop_lca_data_manager
+
+.. autoapi-nested-parse::
+
+   Crop data manager
+   =================
+
+   This module contains the CropDataManager class which is used to manage the crop data used in the crop LCA model.
+   The class contains a method to get the crop names used in the crop LCA model.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   crop_lca.resource_manager.crop_lca_data_manager.CropDataManager
+
+
+
+
+.. py:class:: CropDataManager
+
+
+   The CropDataManager class is used to manage the crop data used in the crop LCA model.
+
+   .. attribute:: catchment_to_param_crop_names
+
+      A list of tuples containing the crop names used in the catchment data and the parameter names used in the crop LCA model.
+
+      :type: list
+
+   .. method:: get_catchment_to_param_crop_names()
+
+      Returns the list of tuples containing the crop names used in the catchment data and the parameter names used in the crop LCA model.
+
+
+   .. py:method:: get_catchment_to_param_crop_names()
+
+
+

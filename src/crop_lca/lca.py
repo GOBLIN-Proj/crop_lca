@@ -1,24 +1,38 @@
-# IMPORTS
+"""
+Crop LCA
+========
+This module contains the classes and methods used to calculate the carbon footprint of crop production.
+"""
 import numpy as np
 import pandas as pd
 
-from crop_lca.data_loader import Loader
+from crop_lca.resource_manager.data_loader import Loader
 import copy
-
-
 
 # CO2 from Crop Biomass
 
 class Conversion:
+    """
+    Class for calculating CO2 emissions from transition from grassland to crop.
+
+    Methods
+    -------
+    co2_form_grassland_to_crop(data)
+        Calculate carbon emissions from transition from grassland to crop.
+    """
     def __init__(self, ef_country) -> None:
         self.loader_class = Loader(ef_country)
 
     def co2_form_grassland_to_crop(self, data):
-
         """
-        returns the carbon from transition from grass to crop
-        """
+        Calculate carbon emissions from transition from grassland to crop.
 
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+
+        Returns:
+        - float: Carbon emissions from transition.
+        """
         grass = self.loader_class.emissions_factors.get_ef_grassland_dm_t()
 
         carbon_fraction = 0.5
@@ -32,40 +46,58 @@ class Conversion:
 
 # Direct N2O Emissions from crop Residues
 class Residues:
+    """
+    Class for calculating direct N2O emissions from crop residues.
+
+    Methods
+    -------
+    n_from_crop_residue_direct(data)
+        Calculate direct N2O emissions from crop residues.
+    """
     def __init__(self, ef_country):
         self.loader_class = Loader(ef_country)
 
     def n_from_crop_residue_direct(self, data):
         """
+        Calculate direct N2O emissions from crop residues.
 
-        EQUATION 11.6 (UPDATED) N FROM CROP RESIDUES AND FORAGE/PASTURE RENEWAL (TIER 1) (2019 IPCC)
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
 
-        Fcr = annual amount of N in crop residues (above and below ground), including N-fixing crops,
-        and from forage/pasture renewal, returned to soils annually, kg N yr-1
+        Returns:
+        - float: Direct N2O emissions from crop residues.
 
-        AGR = annual total amount of above-ground crop residue for crop T, kg d.m. yr-1.
+        Notes:
+        - This method is based on the IPCC 2019 guidelines for national greenhouse gas inventories.
+        - The method is based on the following equation:
 
-        NAG = N content of above-ground residues for crop T, kg N (kg d.m.) -1
+            EQUATION 11.6 (UPDATED) N FROM CROP RESIDUES AND FORAGE/PASTURE RENEWAL (TIER 1) (2019 IPCC)
+        - Where:
+            Fcr = annual amount of N in crop residues (above and below ground), including N-fixing crops,
+            and from forage/pasture renewal, returned to soils annually, kg N yr-1
 
-        FracRemove= fraction of above-ground residues of crop T removed annually for purposes such as feed, bedding and construction, dimensionless. Survey of experts in country is required to obtain
-        data. If data for FracRemove are not available, assume no removal
+            AGR = annual total amount of above-ground crop residue for crop T, kg d.m. yr-1.
 
-        BGR = annual total amount of belowground crop residue for crop T, kg d.m. yr-1
+            NAG = N content of above-ground residues for crop T, kg N (kg d.m.) -1
 
-        Crop_t = harvested annual dry matter yield for crop T, kg d.m. ha-1
+            FracRemove= fraction of above-ground residues of crop T removed annually for purposes such as feed, bedding and construction, dimensionless. Survey of experts in country is required to obtain
+            data. If data for FracRemove are not available, assume no removal
 
-        AG_dm = Above-ground residue dry matter for crop T, kg d.m. ha-1
+            BGR = annual total amount of belowground crop residue for crop T, kg d.m. yr-1
 
-        Rag = ratio of above-ground residue dry matter to harvested yield for crop T (Crop(T)), kg d.m. ha-
-        1 (kg d.m. ha-1)-1, (Table 11.1a)
+            Crop_t = harvested annual dry matter yield for crop T, kg d.m. ha-1
 
-        RS = ratio of below-ground root biomass to above-ground shoot biomass for crop T, kg d.m.ha-1
-        (kg d.m. ha-1)-1, (Table 11.1a)
+            AG_dm = Above-ground residue dry matter for crop T, kg d.m. ha-1
 
-        FracRenew = = fraction of total area under crop T that is renewed annually 15, dimensionless. For countries
-        where pastures are renewed on average every X years, FracRenew = 1/X. For annual crops
-        FracRenew = 1
+            Rag = ratio of above-ground residue dry matter to harvested yield for crop T (Crop(T)), kg d.m. ha-
+            1 (kg d.m. ha-1)-1, (Table 11.1a)
 
+            RS = ratio of below-ground root biomass to above-ground shoot biomass for crop T, kg d.m.ha-1
+            (kg d.m. ha-1)-1, (Table 11.1a)
+
+            FracRenew = fraction of total area under crop T that is renewed annually 15, dimensionless. For countries
+            where pastures are renewed on average every X years, FracRenew = 1/X. For annual crops
+            FracRenew = 1
         """
 
         dry_matter_fraction = {
@@ -386,15 +418,39 @@ class Residues:
 # Fertiliser Use Calculations
 
 class FertilserUse:
+    """
+    Class for calculating fertiliser use.
+
+    Methods
+    ------- 
+    total_an_fert_use(data, urea_proportion)
+        Total AN fert use in kg.
+
+    total_urea_fert_use(data, urea_proportion)
+        Total urea fert use in kg.
+
+    total_p_fert_use(data)
+        Total P fert use in kg.
+
+    total_k_fert_use(data)
+        Total K fert use in kg.
+
+    """
     def __init__(self, ef_country):
         self.loader_class = Loader(ef_country)
 
+
     def total_an_fert_use(self, data, urea_proportion):
-
         """
-        Total AN fert use in kg
-        """
+        Returns the total AN fert use in kg.
 
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea.
+
+        Returns:
+        - float: Total AN fert use in kg.
+        """
         crop_names = list(data.__getitem__("crop_group").__dict__.keys())
 
         total_fert_an = 0
@@ -415,9 +471,15 @@ class FertilserUse:
 
 
     def total_urea_fert_use(self, data, urea_proportion):
-
         """
-        Total Urea fert use in kg
+        Returns the total urea fert use in kg.
+
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea.
+
+        Returns:
+        - float: Total urea fert use in kg.
         """
         crop_names = list(data.__getitem__("crop_group").__dict__.keys())
 
@@ -438,7 +500,15 @@ class FertilserUse:
 
 
     def total_p_fert_use(self, data):
+        """
+        Returns the total P fert use in kg.
 
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+
+        Returns:
+        - float: Total P fert use in kg.
+        """
         crop_names = list(data.__getitem__("crop_group").__dict__.keys())
 
         total_fert_p = 0
@@ -459,7 +529,15 @@ class FertilserUse:
 
 
     def total_k_fert_use(self, data):
+        """
+        Returns the total K fert use in kg.
 
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+
+        Returns:
+        - float: Total K fert use in kg.
+        """
         crop_names = list(data.__getitem__("crop_group").__dict__.keys())
 
         total_fert_k = 0
@@ -482,6 +560,44 @@ class FertilserUse:
 # Urea Fertiliser Emissions
 ########################################################################################################
 class FertiliserInputs:
+    """
+    Class for calculating emissions from fertilizer inputs.
+
+    Methods
+    -------
+    urea_N2O_direct(data, urea_proportion, urea_abated_proportion)
+        Calculate total direct emissions from urea and abated urea applied to soils.
+
+    urea_NH3(data, urea_proportion, urea_abated_proportion)
+        Calculate the amount of urea and abated urea volatized as NH3.
+
+    urea_nleach(data, urea_proportion, urea_abated_proportion)
+        Calculate the amount of N from urea and abated urea leached from soils.
+
+    urea_N2O_indirect(data, urea_proportion, urea_abated_proportion)
+        Calculate indirect emissions from urea.
+
+    urea_p_leach(data, urea_proportion, urea_abated_proportion)
+        Calculate the amount of P from urea and abated urea leached from soils.
+
+    n_fertiliser_P_leach(data, urea_proportion)
+        Calculate the amount of P from N fertiliser leached from soils.
+
+    p_fertiliser_P_leach(data)
+        Calculate the amount of P from P fertiliser leached from soils.
+
+    n_fertiliser_direct(data, urea_proportion)
+        Calculate direct emissions from N fertiliser.
+
+    n_fertiliser_NH3(data, urea_proportion)
+        Calculate the amount of N fertiliser volatized as NH3.
+
+    n_fertiliser_nleach(data, urea_proportion)
+        Calculate the amount of N from AN fertiliser leached from soils.
+
+    n_fertiliser_N2O_indirect(data, urea_proportion)
+        Calculate indirect emissions from N fertiliser.
+    """
     def __init__(self, ef_country):
         self.loader_class = Loader(ef_country)
         self.fertiliser_use_class = FertilserUse(ef_country)
@@ -495,9 +611,15 @@ class FertiliserInputs:
     ):
 
         """
-        this function returns the total emissions from urea and abated urea applied to soils
+        Calculate total direct emissions from urea and abated urea applied to soils.
 
-        proporiton of urea abated (urea_abated_factor) is currently set to zero, as there is not parameter for this.
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea used as fertilizer.
+        - urea_abated_proportion (float): Proportion of urea abated.
+
+        Returns:
+        - float: Total direct emissions from urea and abated urea.
         """
 
         urea_abated_factor = urea_abated_proportion
@@ -524,12 +646,15 @@ class FertiliserInputs:
     ):
 
         """
-        This function returns  the amount of urea and abated urea volatised.
-        Below is the original fraction used in the Costa Rica version, however this seems to be incorrect.
-        FRAC=0.02 #FracGASF ammoinium-fertilisers [fraction of synthetic fertiliser N that volatilises as NH3 and NOx under different conditions]
+        Calculate the amount of urea and abated urea volatized as NH3.
 
-        proporiton of urea abated (urea_abated_factor) is currently set to zero, as there is not parameter for this.
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea used as fertilizer.
+        - urea_abated_proportion (float): Proportion of urea abated.
 
+        Returns:
+        - float: Total amount of urea and abated urea volatized as NH3.
         """
         urea_abated_factor = urea_abated_proportion
 
@@ -559,13 +684,15 @@ class FertiliserInputs:
     ):
 
         """
-        This function returns  the amount of urea and abated urea leached from soils.
+        Calculate the amount of N from urea and abated urea leached from soils.
 
-        Below is the original fraction used in the Costa Rica version, however this seems to be incorrect.
-        FRAC=0.02 #FracGASF ammoinium-fertilisers [fraction of synthetic fertiliser N that volatilises as NH3 and NOx under different conditions]
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea used as fertilizer.
+        - urea_abated_proportion (float): Proportion of urea abated.
 
-        proporiton of urea abated (urea_abated_factor) is currently set to zero, as there is not parameter for this.
-
+        Returns:
+        - float: Total amount of urea and abated urea leached from soils.
         """
         urea_abated_factor = urea_abated_proportion
 
@@ -589,7 +716,15 @@ class FertiliserInputs:
         urea_abated_proportion,
     ):
         """
-        this function returns the indirect emissions from urea
+        Calculate indirect emissions from urea.
+
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea used as fertilizer.
+        - urea_abated_proportion (float): Proportion of urea abated.
+
+        Returns:
+        - float: Total indirect emissions from urea.
         """
         indirect_atmosphere = (
             self.loader_class.emissions_factors.get_ef_indirect_n2o_atmospheric_deposition_to_soils_and_water(
@@ -599,6 +734,9 @@ class FertiliserInputs:
         indirect_leaching = self.loader_class.emissions_factors.get_ef_indirect_n2o_from_leaching_and_runoff(
             
         )
+        """
+        this functino returns the upstream CO2 emissions from electricity consumption
+        """
 
         return (
             self.urea_NH3(
@@ -624,7 +762,15 @@ class FertiliserInputs:
         urea_abated_proportion,
     ):
         """
-        this function returns the idirect emissions from urea
+         Calculate the amount of P from urea and abated urea leached from soils.
+
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea used as fertilizer.
+        - urea_abated_proportion (float): Proportion of urea abated.
+
+        Returns:
+        - float: Total indirect emissions from urea.
         """
 
         frac_leach = float(self.loader_class.emissions_factors.get_ef_Frac_P_Leach())
@@ -649,7 +795,14 @@ class FertiliserInputs:
         self, data, urea_proportion
     ):
         """
-        this function returns the idirect emissions from urea
+         Calculate the amount of P from AN fertiliser leached from soils.
+
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea used as fertilizer.
+
+        Returns:
+        - float: Total indirect emissions from urea.
         """
         frac_leach = float(self.loader_class.emissions_factors.get_ef_Frac_P_Leach())
 
@@ -660,7 +813,13 @@ class FertiliserInputs:
 
     def p_fertiliser_P_leach(self, data):
         """
-        this function returns the idirect emissions from urea
+         Calculate the amount of P from P fertiliser leached from soils.
+
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+
+        Returns:
+        - float: Total indirect emissions from urea
         """
         frac_leach = float(self.loader_class.emissions_factors.get_ef_Frac_P_Leach())
 
@@ -672,9 +831,15 @@ class FertiliserInputs:
     def n_fertiliser_direct(
         self, data, urea_proportion
     ):
-
         """
         This function returns total direct emissions from ammonium nitrate application at field level
+
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea used as fertilizer.
+
+        Returns:
+        - float: Total direct emissions from ammonium nitrate application at field level
         """
         ef = self.loader_class.emissions_factors.get_ef_ammonium_nitrate()
 
@@ -684,9 +849,15 @@ class FertiliserInputs:
 
 
     def n_fertiliser_NH3(self, data, urea_proportion):
-
         """
         This function returns total NH3 emissions from ammonium nitrate application at field level
+
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea used as fertilizer.
+
+        Returns:
+        - float: Total NH3 emissions from ammonium nitrate application at field level
         """
         ef = self.loader_class.emissions_factors.get_ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox(
             
@@ -699,9 +870,16 @@ class FertiliserInputs:
 
     def n_fertiliser_nleach(
         self, data, urea_proportion
-    ):
+    ):  
         """
-        This function returns total leached emissions from ammonium nitrate application at field level
+        This function returns the amount of N from AN fertiliser leached from soils.
+
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea used as fertilizer.
+
+        Returns:
+        - float: Total amount of N from AN fertiliser leached from soils
         """
 
         leach = self.loader_class.emissions_factors.get_ef_frac_leach_runoff()
@@ -714,11 +892,16 @@ class FertiliserInputs:
     def n_fertiliser_indirect(
         self, data, urea_proportion
     ):
-
         """
-        this function returns the indirect emissions from ammonium nitrate fertiliser
-        """
+        This function returns the indirect emissions from AN fertiliser.
 
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea used as fertilizer.
+
+        Returns:
+        - float: Total indirect emissions from AN fertiliser
+        """
         indirect_atmosphere = (
             self.loader_class.emissions_factors.get_ef_indirect_n2o_atmospheric_deposition_to_soils_and_water(
                 
@@ -743,15 +926,45 @@ class FertiliserInputs:
 
 
 class Upstream:
+    """
+    Class for calculating upstream emissions.
+
+    Methods
+    -------
+    fert_upstream_po4(data, urea_proportion)
+        Calculate the upstream emissions from urea and ammonium fertiliser manufacture.
+    
+    fert_upstream_co2(data, urea_proportion)
+        Calculate the upstream CO2 emissions from urea and ammonium fertiliser manufacture.
+
+    diesel_CO2(diesel_kg)
+        Calculate the direct and indirect upstream CO2 emissions from diesel.
+
+    diesel_PO4(diesel_kg)
+        Calculate the direct and indirect upstream PO4 emissions from diesel.
+
+    elec_CO2(elec_kwh)
+        Calculate the upstream CO2 emissions from electricity consumption.
+
+    elec_PO4(elec_kwh)
+        Calculate the upstream PO4 emissions from electricity consumption.
+
+    """
     def __init__(self, ef_country):
         self.loader_class = Loader(ef_country)
         self.fertiliser_use_class = FertilserUse(ef_country)
 
 
     def fert_upstream_po4(self, data, urea_proportion):
-
         """
-        this function returns the upstream emissions from urea and ammonium fertiliser manufature
+        this function returns the upstream emissions from urea and ammonium fertiliser manufacture.
+
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea used as fertilizer.
+
+        Returns:
+        - float: Upstream emissions from urea and ammonium fertiliser manufacture.
         """
         AN_fert_PO4 = self.loader_class.upstream.get_upstream_kg_po4e(
             "ammonium_nitrate_fertiliser"
@@ -773,9 +986,15 @@ class Upstream:
         )
 
     def fert_upstream_co2(self, data, urea_proportion):
-
         """
-        this function returns the upstream emissions from urea and ammonium fertiliser manufature
+        this function returns the upstream CO2 emissions from urea and ammonium fertiliser manufacture.
+
+        Parameters:
+        - data (object): Object containing necessary data for calculation.
+        - urea_proportion (float): Proportion of urea used as fertilizer.
+
+        Returns:
+        - float: Upstream CO2 emissions from urea and ammonium fertiliser manufacture.
         """
         AN_fert_CO2 = self.loader_class.upstream.get_upstream_kg_co2e(
             "ammonium_nitrate_fertiliser"
@@ -798,11 +1017,15 @@ class Upstream:
         )
     
     def diesel_CO2(self, diesel_kg):
-
         """
-        this function returns the direct and indirect upstream CO2 emmisions from diesel
-        """
+        this function returns the direct and indirect upstream CO2 emmisions from diesel 
 
+        Parameters:
+        - diesel_kg (float): Amount of diesel used.
+
+        Returns:
+        - float: Direct and indirect upstream CO2 emmisions from diesel.
+        """
         Diesel_indir = self.loader_class.upstream.get_upstream_kg_co2e("diesel_indirect")
         Diest_dir = self.loader_class.upstream.get_upstream_kg_co2e("diesel_direct")
 
@@ -812,8 +1035,13 @@ class Upstream:
     def diesel_PO4(self, diesel_kg):
         """
         this function returns the direct and indirect upstream PO4 emmisions from diesel
-        """
 
+        Parameters:
+        - diesel_kg (float): Amount of diesel used.
+
+        Returns:
+        - float: Direct and indirect upstream PO4 emmisions from diesel.
+        """
         Diesel_indir = self.loader_class.upstream.get_upstream_kg_po4e(
             "diesel_indirect"
         )
@@ -823,11 +1051,15 @@ class Upstream:
     
 
     def elec_CO2(self, elec_kwh):
-
         """
-        this functino returns the upstream CO2 emissions from electricity consumption
-        """
+        this function returns the upstream CO2 emissions from electricity consumption
 
+        Parameters:
+        - elec_kwh (float): Amount of electricity consumed.
+
+        Returns:
+        - float: Upstream CO2 emissions from electricity consumption.
+        """
         elec_consumption = self.loader_class.upstream.get_upstream_kg_co2e(
             "electricity_consumed"
         )  # based on Norway hydropower
@@ -836,9 +1068,14 @@ class Upstream:
 
     def elec_PO4(self, elec_kwh):
         """
-        this functino returns the upstream CO2 emissions from electricity consumption
-        """
+        this function returns the upstream PO4 emissions from electricity consumption
+        
+        Parameters:
+        - elec_kwh (float): Amount of electricity consumed.
 
+        Returns:
+        - float: Upstream PO4 emissions from electricity consumption.
+        """
         elec_consumption = self.loader_class.upstream.get_upstream_kg_po4e(
             "electricity_consumed"
         )  # based on Norway hydropower
@@ -849,6 +1086,25 @@ class Upstream:
 # Total Global Warming Potential of whole farms
 ################################################################################
 class ClimateChangeTotals:
+    """
+    A class to calculate various climate change totals based on factors like emissions, residues, fertilizers, etc.
+
+    Attributes:
+        loader_class (Loader): An instance of the Loader class to load data.
+        residues_class (Residues): An instance of the Residues class to handle residue data.
+        fertiliser_emissions_class (FertiliserInputs): An instance of the FertiliserInputs class to manage fertilizer emissions.
+        fertiliser_use_class (FertilserUse): An instance of the FertilserUse class to handle fertilizer use data.
+        upstream_class (Upstream): An instance of the Upstream class to deal with upstream data.
+
+    Methods:
+        create_emissions_dictionary(keys): Creates a dictionary to store emissions data.
+        create_extended_emissions_dictionary(keys): Creates an extended dictionary to store emissions data including upstream.
+        total_residue_per_crop_direct(data): Calculates total nitrogen from all crops based on direct residue data.
+        total_fertiliser_direct(data, urea_proportion, urea_abated_proportion): Calculates total direct emissions from urea and ammonium fertilizers.
+        total_fertiliser_indirect(data, urea_proportion, urea_abated_proportion): Calculates total indirect emissions from urea and ammonium fertilizers.
+        urea_co2(data, urea_proportion, urea_abated_proportion): Calculates total CO2 emissions from urea application.
+        upstream_and_inputs_and_fuel_co2(data, urea_proportion, diesel_kg, elec_kwh): Calculates total CO2 emissions from upstream activities, inputs, and fuel usage.
+    """
     def __init__(self, ef_country):
         self.loader_class = Loader(ef_country)
         self.residues_class = Residues(ef_country)
@@ -858,6 +1114,15 @@ class ClimateChangeTotals:
 
 
     def create_emissions_dictionary(self, keys):
+        """
+        Creates a dictionary to store emissions data.
+
+        Args:
+            keys (list): List of keys to be used in the emissions dictionary.
+
+        Returns:
+            dict: A dictionary with emissions data initialized to zero.
+        """
         crop_key_list = [
             "crop_residue_direct",
             "N_direct_fertiliser",
@@ -879,6 +1144,15 @@ class ClimateChangeTotals:
 
 
     def create_extended_emissions_dictionary(self, keys):
+        """
+        Creates an extended dictionary to store emissions data including upstream.
+
+        Args:
+            keys (list): List of keys to be used in the emissions dictionary.
+
+        Returns:
+            dict: An extended dictionary with emissions data initialized to zero, including upstream data.
+        """
         crop_key_list = [
             "crop_residue_direct",
             "N_direct_fertiliser",
@@ -904,7 +1178,15 @@ class ClimateChangeTotals:
     # Total  N from All crops
     #######################################################################################################
     def total_residue_per_crop_direct(self, data):
+        """
+        Calculates the total nitrogen from all crops based on direct residue data.
 
+        Args:
+            data: Data containing information about crops and their residues.
+
+        Returns:
+            float: Total nitrogen from all crops based on direct residue data.
+        """
         mole_weight = 44.0 / 28.0
 
         EF_1 = self.loader_class.emissions_factors.get_ef_emissions_factor_1_ipcc_2019()
@@ -928,9 +1210,16 @@ class ClimateChangeTotals:
         urea_abated_proportion,
     ):
         """
-        This function returns the total direct and indirect emissions from urea and ammonium fertilisers
-        """
+        Calculates total direct emissions from urea and ammonium fertilizers.
 
+        Args:
+            data: Data containing information about fertilizer application.
+            urea_proportion (float): Proportion of urea used.
+            urea_abated_proportion (float): Proportion of urea that is abated.
+
+        Returns:
+            float: Total direct emissions from urea and ammonium fertilizers.
+        """
         result = self.fertiliser_emissions_class.urea_N2O_direct(
             data,
             urea_proportion,
@@ -949,9 +1238,16 @@ class ClimateChangeTotals:
         urea_abated_proportion,
     ):
         """
-        This function returns the total direct and indirect emissions from urea and ammonium fertilisers
-        """
+        Calculates total indirect emissions from urea and ammonium fertilizers.
 
+        Args:
+            data: Data containing information about fertilizer application.
+            urea_proportion (float): Proportion of urea used.
+            urea_abated_proportion (float): Proportion of urea that is abated.
+
+        Returns:
+            float: Total indirect emissions from urea and ammonium fertilizers.
+        """
         result = self.fertiliser_emissions_class.urea_N2O_indirect(
             data,
             urea_proportion,
@@ -965,12 +1261,16 @@ class ClimateChangeTotals:
 
     def urea_co2(self, data, urea_proportion, urea_abated_proportion):
         """
-        returns the total CO2 from urea application
+        Calculates total CO2 emissions from urea application.
 
-        proporiton of urea abated (urea_abated_factor) is currently set to zero, as there is not parameter for this.
+        Args:
+            data: Data containing information about fertilizer application.
+            urea_proportion (float): Proportion of urea used.
+            urea_abated_proportion (float): Proportion of urea that is abated.
 
+        Returns:
+            float: Total CO2 emissions from urea application.
         """
-
         urea_abated_factor = urea_abated_proportion
 
         urea_factor = 1 - urea_abated_proportion
@@ -993,6 +1293,18 @@ class ClimateChangeTotals:
         diesel_kg,
         elec_kwh,
     ):
+        """
+        Calculates total CO2 emissions from upstream activities, inputs, and fuel usage.
+
+        Args:
+            data: Data containing information about upstream activities, inputs, and fuel usage.
+            urea_proportion (float): Proportion of urea used.
+            diesel_kg (float): Amount of diesel used in kilograms.
+            elec_kwh (float): Amount of electricity used in kilowatt-hours.
+
+        Returns:
+            float: Total CO2 emissions from upstream activities, inputs, and fuel usage.
+        """
         return (
             self.upstream_class.diesel_CO2(diesel_kg)
             + self.upstream_class.elec_CO2(elec_kwh)
@@ -1005,6 +1317,23 @@ class ClimateChangeTotals:
 ###############################################################################
 
 class EutrophicationTotals:
+    """
+    A class to calculate various eutrophication totals based on factors like emissions, residues, fertilizers, etc.
+
+    Attributes:
+        loader_class (Loader): An instance of the Loader class to load data.
+        residues_class (Residues): An instance of the Residues class to handle residue data.
+        fertiliser_emissions_class (FertiliserInputs): An instance of the FertiliserInputs class to manage fertilizer emissions.
+        upstream_class (Upstream): An instance of the Upstream class to deal with upstream data.
+
+    Methods:
+        create_emissions_dictionary(keys): Creates a dictionary to store emissions data.
+        create_extended_emissions_dictionary(keys): Creates an extended dictionary to store emissions data including upstream.
+        total_soils_NH3_and_LEACH_EP(data, urea_proportion, urea_abated_proportion): Calculates total emissions of NH3 and LEACH to soils.
+        total_soils_P_LEACH_EP(data, urea_proportion, urea_abated_proportion): Calculates total emissions of P LEACH to soils.
+        total_soils_EP(data, urea_proportion, urea_abated_proportion): Calculates total emissions of EP to soils.
+        upstream_and_inputs_and_fuel_po4(data, urea_proportion, diesel_kg, elec_kwh): Calculates total PO4 emissions from upstream activities, inputs, and fuel usage.
+    """
     def __init__(self, ef_country):
         self.loader_class = Loader(ef_country)
         self.residues_class = Residues(ef_country)
@@ -1012,6 +1341,15 @@ class EutrophicationTotals:
         self.upstream_class = Upstream(ef_country)
 
     def create_emissions_dictionary(self, keys):
+        """
+        Creates a dictionary to store emissions data.
+
+        Args:
+            keys (list): List of keys to be used in the emissions dictionary.
+
+        Returns:
+            dict: A dictionary with emissions data initialized to zero.
+        """
         crop_key_list = [
             "soils",
         ]
@@ -1029,6 +1367,15 @@ class EutrophicationTotals:
 
 
     def create_extended_emissions_dictionary(self, keys):
+        """
+        Creates an extended dictionary to store emissions data including upstream.
+
+        Args:
+            keys (list): List of keys to be used in the emissions dictionary.
+
+        Returns:
+            dict: An extended dictionary with emissions data initialized to zero, including upstream data.
+        """
         crop_key_list = [
             "soils",
             "upstream"
@@ -1053,8 +1400,16 @@ class EutrophicationTotals:
         urea_abated_proportion,
     ):
         """
-        Convert N to PO4  = 0.42
+        Calculates total emissions of NH3 and LEACH to soils.
 
+        Args:
+            data: Data containing information about fertilizer application.
+            urea_proportion (float): Proportion of urea used.
+            urea_abated_proportion (float): Proportion of urea that is abated.
+
+        Returns:
+            float: Total emissions of NH3 and LEACH to soils.
+       
         """
         indirect_atmosphere = (
             self.loader_class.emissions_factors.get_ef_indirect_n2o_atmospheric_deposition_to_soils_and_water(
@@ -1077,8 +1432,8 @@ class EutrophicationTotals:
             data,urea_proportion
         )
 
-        return (NH3N * indirect_atmosphere) + LEACH * 0.42
-
+        return (NH3N * indirect_atmosphere) + LEACH * 0.42 #N to PO4 0.42
+    
 
     def total_soils_P_LEACH_EP(
         self,
@@ -1086,7 +1441,17 @@ class EutrophicationTotals:
         urea_proportion,
         urea_abated_proportion,
     ):
+        """
+        Calculates total emissions of P LEACH to soils.
 
+        Args:
+            data: Data containing information about fertilizer application.
+            urea_proportion (float): Proportion of urea used.
+            urea_abated_proportion (float): Proportion of urea that is abated.
+
+        Returns:
+            float: Total emissions of P LEACH to soils.
+        """
         PLEACH = (
             self.fertiliser_emissions_class.urea_P_leach(
                 data,
@@ -1107,7 +1472,17 @@ class EutrophicationTotals:
         urea_proportion,
         urea_abated_proportion,
     ):
+        """
+        Calculates total emissions of EP to soils.
 
+        Args:
+            data: Data containing information about fertilizer application.
+            urea_proportion (float): Proportion of urea used.
+            urea_abated_proportion (float): Proportion of urea that is abated.
+
+        Returns:
+            float: Total emissions of EP to soils.
+        """
         return self.total_soils_NH3_and_LEACH_EP(
             data,
             urea_proportion,
@@ -1126,6 +1501,18 @@ class EutrophicationTotals:
         diesel_kg,
         elec_kwh,
     ):
+        """
+        Calculates total PO4 emissions from upstream activities, inputs, and fuel usage.
+
+        Args:
+            data: Data containing information about upstream activities, inputs, and fuel usage.
+            urea_proportion (float): Proportion of urea used.
+            diesel_kg (float): Amount of diesel used in kilograms.
+            elec_kwh (float): Amount of electricity used in kilowatt-hours.
+
+        Returns:
+            float: Total PO4 emissions from upstream activities, inputs, and fuel usage.
+        """
         return (
             self.upstream_class.diesel_PO4(diesel_kg)
             + self.upstream_class.elec_PO4(elec_kwh)
@@ -1135,12 +1522,32 @@ class EutrophicationTotals:
 # Air Quality
 ###############################################################################
 class AirQualityTotals:
+    """
+    A class to calculate various air quality totals based on factors like emissions from soils.
+
+    Attributes:
+        loader_class (Loader): An instance of the Loader class to load data.
+        fertiliser_emissions_class (FertiliserInputs): An instance of the FertiliserInputs class to manage fertilizer emissions.
+
+    Methods:
+        create_emissions_dictionary(keys): Creates a dictionary to store emissions data.
+        total_soils_NH3_AQ(data, urea_proportion, urea_abated_proportion): Calculates total NH3 emissions from soils.
+    """
     def __init__(self, ef_country):
         self.loader_class = Loader(ef_country)
         self.fertiliser_emissions_class = FertiliserInputs(ef_country)
 
 
     def create_emissions_dictionary(self, keys):
+        """
+        Creates a dictionary to store emissions data.
+
+        Args:
+            keys (list): List of keys to be used in the emissions dictionary.
+
+        Returns:
+            dict: A dictionary with emissions data initialized to zero.
+        """
         crop_key_list = [
             "soils",
         ]
@@ -1164,6 +1571,17 @@ class AirQualityTotals:
         urea_proportion,
         urea_abated_proportion,
     ):
+        """
+        Calculates total NH3 emissions from soils.
+
+        Args:
+            data: Data containing information about fertilizer application.
+            urea_proportion (float): Proportion of urea used.
+            urea_abated_proportion (float): Proportion of urea that is abated.
+
+        Returns:
+            float: Total NH3 emissions from soils.
+        """
 
         NH3N = self.fertiliser_emissions_class.urea_NH3(
             data,

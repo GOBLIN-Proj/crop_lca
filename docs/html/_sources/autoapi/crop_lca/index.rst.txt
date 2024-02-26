@@ -1,0 +1,28 @@
+:py:mod:`crop_lca`
+==================
+
+.. py:module:: crop_lca
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   database/index.rst
+   geo_crop_lca/index.rst
+   resource_manager/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   lca/index.rst
+   models/index.rst
+   national_crop_production/index.rst
+
+

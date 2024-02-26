@@ -1,11 +1,45 @@
-from crop_lca.data_loader import Loader
+"""
+National Crop Production Data
+=============================
+This module contains the NationalCropData class which is used to generate a dataframe of national crop production data 
+and a dataframe of scenario crop production data.
+
+In addition, the class also handles the generation of farm data (fertiliser inputs) for the crop LCA model.
+"""
+from crop_lca.resource_manager.data_loader import Loader
 import pandas as pd 
 
 class NationalCropData:
+    """
+    The NationalCropData class is used to generate a dataframe of national crops and a dataframe of scenario crops, 
+    as well as to generate farm data (fertiliser inputs) for the crop LCA model.
 
+    Methods
+    -------
+    gen_national_crop_production_dataframe(year)
+        Returns a dataframe of national crops.
+
+    gen_scenario_crop_production_dataframe(calibration_year, target_year, scenario= None, crop_dataframe=None)
+        Returns a dataframe of national scenario crops.
+
+    gen_farm_data(crop_dataframe, urea_proportion, default_urea, default_urea_abated)
+        Returns a dataframe of farm data (fertiliser inputs).
+    """
     @classmethod
     def gen_national_crop_production_dataframe(cls, year):
+        """
+        Returns a dataframe of national crops.
 
+        Parameters
+        ----------
+        year : int
+            The year for which the data is being generated.
+
+        Returns
+        -------
+        pandas.DataFrame
+            A dataframe of national crops.
+        """
         loader_class = Loader()
 
         cso_crops = loader_class.get_national_crop_production()
@@ -33,7 +67,25 @@ class NationalCropData:
 
     @classmethod
     def gen_scenario_crop_production_dataframe(cls, calibration_year, target_year, scenario= None, crop_dataframe=None):
+        """
+        Returns a dataframe of national scenario crops.
 
+        Parameters
+        ----------
+        calibration_year : int
+            The year for which the data is being generated.
+        target_year : int
+            The target year for which the data is being generated.
+        scenario : int
+            The scenario for which the data is being generated.
+        crop_dataframe : pandas.DataFrame
+            A dataframe of national crops. Default is None.
+
+        Returns
+        -------
+        pandas.DataFrame
+            A dataframe of scenario crops.
+        """
         loader_class = Loader()
 
         cso_crops = loader_class.get_national_crop_production()
@@ -63,7 +115,25 @@ class NationalCropData:
 
     @classmethod
     def gen_farm_data(cls, crop_dataframe, urea_proportion, default_urea, default_urea_abated):
+        """
+        Returns a dataframe of farm data (fertiliser inputs).
 
+        Parameters  
+        ----------
+        crop_dataframe : pandas.DataFrame
+            A dataframe of national crops.
+        urea_proportion : pandas.DataFrame
+            A dataframe of urea proportions.
+        default_urea : float
+            The default urea proportion.
+        default_urea_abated : float
+            The default urea abated proportion.
+
+        Returns
+        -------
+        pandas.DataFrame
+            A dataframe of farm data (fertiliser inputs).
+        """
         loader_class = Loader()
 
         application_rate = loader_class.get_fertiliser()

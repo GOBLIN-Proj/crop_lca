@@ -1,4 +1,7 @@
 # 🌾 Crop_lca, a lifecycle assessment tool for cropping systems in Ireland
+[![license](https://img.shields.io/badge/License-MIT-red)](https://github.com/colmduff/crop_lca/blob/0.1.0/LICENSE)
+[![python](https://img.shields.io/badge/python-3.9-blue?logo=python&logoColor=white)](https://github.com/colmduff/crop_lca)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
  Based on the [GOBLIN](https://gmd.copernicus.org/articles/15/2239/2022/) (**G**eneral **O**verview for a **B**ackcasting approach of **L**ivestock **IN**tensification) LifeCycle Analysis tool, the Crop_lca module decouples this module making it an independent distribution package.
 
@@ -13,6 +16,22 @@
     -   N_indirect_fertiliser
     -   soils_CO2
 
+## Structure
+ The package is structured for use in national and catchment level analysis. 
+
+ The geo_crop_lca sub module is intended for use at the catchment level and interfaces with the catchment_data_api to 
+ retrieve catchment specific crop areas and types data that has been retrieved from [Ireland's National Land Cover map](https://www.epa.ie/our-services/monitoring--assessment/assessment/mapping/national-land-cover-map/) and merged with crop types using the [LUCAS land cover dataset](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=LUCAS_-_Land_use_and_land_cover_survey).
+
+ ```
+    src/
+    │
+    ├── crop_lca/
+        └── ... (other modules and sub-packages)
+        │
+        ├── geo_crop_lca/
+        |   └── ... (other modules and sub-packages)
+
+ ```
 ## Installation
 
 Install from git hub. 

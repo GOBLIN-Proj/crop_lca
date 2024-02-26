@@ -1,0 +1,145 @@
+:py:mod:`crop_lca.resource_manager.data_loader`
+===============================================
+
+.. py:module:: crop_lca.resource_manager.data_loader
+
+.. autoapi-nested-parse::
+
+   Data Loader
+   ===========
+   This module contains the Loader class, which is used to load data from the database and create instances of the models used in the crop LCA model.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   crop_lca.resource_manager.data_loader.Loader
+
+
+
+
+.. py:class:: Loader(ef_country=None)
+
+
+   The Loader class is used to load data from the database and create instances of the models used in the crop LCA model.
+
+   .. attribute:: ef_country
+
+      The name of the country for which the data is being loaded.
+
+      :type: str
+
+   .. attribute:: dataframes
+
+      An instance of the DataManager class used to load data from the database.
+
+      :type: DataManager
+
+   .. attribute:: crop_chars
+
+      An instance of the CropChars class used to manage the crop characteristics data.
+
+      :type: CropChars
+
+   .. attribute:: fertiliser
+
+      An instance of the Fertiliser class used to manage the fertiliser data.
+
+      :type: Fertiliser
+
+   .. attribute:: emissions_factors
+
+      An instance of the Emissions_Factors class used to manage the emissions factor data.
+
+      :type: Emissions_Factors
+
+   .. attribute:: upstream
+
+      An instance of the Upstream class used to manage the upstream data.
+
+      :type: Upstream
+
+   .. method:: get_crop_chars()
+
+      Returns an instance of the CropChars class.
+
+   .. method:: get_fertiliser()
+
+      Returns an instance of the Fertiliser class.
+
+   .. method:: get_emissions_factors()
+
+      Returns an instance of the Emissions_Factors class.
+
+   .. method:: get_upstream()
+
+      Returns an instance of the Upstream class.
+
+   .. method:: get_national_crop_production()
+
+      Returns the national crop production data.
+
+   .. method:: get_fao_yield_data(ef_country, index=None)
+
+      Returns the FAO yield data for the specified country.
+
+   .. py:method:: get_crop_chars()
+
+      Returns an instance of the CropChars class.
+
+      :returns: An instance of the CropChars class used to manage the crop characteristics data.
+      :rtype: CropChars
+
+
+   .. py:method:: get_fertiliser()
+
+      Returns an instance of the Fertiliser class.
+
+      :returns: An instance of the Fertiliser class used to manage the fertiliser data.
+      :rtype: Fertiliser
+
+
+   .. py:method:: get_emissions_factors()
+
+      Returns an instance of the Emissions_Factors class.
+
+      :returns: An instance of the Emissions_Factors class used to manage the emissions factor data.
+      :rtype: Emissions_Factors
+
+
+   .. py:method:: get_upstream()
+
+      Returns an instance of the Upstream class.
+
+      :returns: An instance of the Upstream class used to manage the upstream data.
+      :rtype: Upstream
+
+
+   .. py:method:: get_national_crop_production()
+
+      Returns the national crop production data.
+
+      :returns: The national crop production data.
+      :rtype: pd.DataFrame
+
+
+   .. py:method:: get_fao_yield_data(ef_country, index=None)
+
+      Returns the FAO yield data for the specified country.
+
+      :param ef_country: The name of the country for which the data is being loaded.
+      :type ef_country: str
+      :param index: The index of the data to be returned.
+      :type index: int, optional
+
+      :returns: The FAO yield data for the specified country.
+      :rtype: pd.DataFrame
+
+
+

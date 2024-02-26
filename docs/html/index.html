@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌾 Crop_lca, a lifecycle assessment tool for cropping systems in Ireland &mdash; Crop LCA 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=938c9ccc"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="autoapi/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            Crop LCA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Crop LCA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">🌾 Crop_lca, a lifecycle assessment tool for cropping systems in Ireland</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="crop-lca-a-lifecycle-assessment-tool-for-cropping-systems-in-ireland">
+<h1>🌾 Crop_lca, a lifecycle assessment tool for cropping systems in Ireland<a class="headerlink" href="#crop-lca-a-lifecycle-assessment-tool-for-cropping-systems-in-ireland" title="Link to this heading"></a></h1>
+<p><a class="reference external" href="https://github.com/colmduff/crop_lca/blob/0.1.0/LICENSE"><img alt="license" src="https://img.shields.io/badge/License-MIT-red" /></a>
+<a class="reference external" href="https://github.com/colmduff/crop_lca"><img alt="python" src="https://img.shields.io/badge/python-3.9-blue?logo=python&amp;logoColor=white" /></a>
+<a class="reference external" href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a></p>
+<p>Based on the <a class="reference external" href="https://gmd.copernicus.org/articles/15/2239/2022/">GOBLIN</a> (<strong>G</strong>eneral <strong>O</strong>verview for a <strong>B</strong>ackcasting approach of <strong>L</strong>ivestock <strong>IN</strong>tensification) LifeCycle Analysis tool, the Crop_lca module decouples this module making it an independent distribution package.</p>
+<p>The package is shipped with key data for emissions factors, fertiliser inputs, crop characteristics and upstream emissions.</p>
+<p>Currently parameterised for Ireland, but the database can be updated with additional emissions factor contexts, which are selected able with an emissions factor key.</p>
+<p>Final results are output as a dictionary object capturing emissions for:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>-   crop_residue_direct
+-   N_direct_fertiliser
+-   N_indirect_fertiliser
+-   soils_CO2
+</pre></div>
+</div>
+<section id="structure">
+<h2>Structure<a class="headerlink" href="#structure" title="Link to this heading"></a></h2>
+<p>The package is structured for use in national and catchment level analysis.</p>
+<p>The geo_crop_lca sub module is intended for use at the catchment level and interfaces with the catchment_data_api to
+retrieve catchment specific crop areas and types data that has been retrieved from <a class="reference external" href="https://www.epa.ie/our-services/monitoring--assessment/assessment/mapping/national-land-cover-map/">Ireland’s National Land Cover map</a> and merged with crop types using the <a class="reference external" href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=LUCAS_-_Land_use_and_land_cover_survey">LUCAS land cover dataset</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   src/
+   │
+   ├── crop_lca/
+       └── ... (other modules and sub-packages)
+       │
+       ├── geo_crop_lca/
+       |   └── ... (other modules and sub-packages)
+
+</pre></div>
+</div>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>Install from git hub.</p>
+<p>When prompted enter your <code class="docutils literal notranslate"><span class="pre">&lt;username&gt;</span></code> and password, which is your <code class="docutils literal notranslate"><span class="pre">&lt;access_token&gt;</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;access_token&gt;</span></code> is provided by the repo manager.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;username&gt;</span></code> pass your own github username.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;crop_lca@git+https://github.com/colmduff/crop_lca.git@main&quot;</span><span class="w"> </span>
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">crop_lca.models</span> <span class="kn">import</span> <span class="n">load_crop_farm_data</span>
+<span class="kn">from</span> <span class="nn">crop_lca.lca</span> <span class="kn">import</span> <span class="n">ClimateChangeTotals</span>
+<span class="kn">from</span> <span class="nn">crop_lca.national_crop_production</span> <span class="kn">import</span> <span class="n">NationalCropData</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Instantiate ClimateChange Totals Class, passing Ireland as the emissions factor country</span>
+    <span class="n">climatechange</span> <span class="o">=</span> <span class="n">ClimateChangeTotals</span><span class="p">(</span><span class="s2">&quot;ireland&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Create a dictionary to store results</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="mi">2020</span>
+    <span class="n">crop_emissions_dict</span> <span class="o">=</span> <span class="n">climatechange</span><span class="o">.</span><span class="n">create_emissions_dictionary</span><span class="p">([</span><span class="n">index</span><span class="p">])</span>
+
+    <span class="c1"># Create some data to generate results</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">NationalCropData</span><span class="o">.</span><span class="n">gen_national_crop_production_dataframe</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+    
+    <span class="n">data_frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1">#proportion of fertiliser inputs that is urea</span>
+    <span class="n">urea_proportion</span> <span class="o">=</span><span class="mf">0.2</span>
+    <span class="n">urea_abated_proportion</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># generate results and store them in the dictionary</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">load_crop_farm_data</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span>
+
+    <span class="n">crop_emissions_dict</span><span class="p">[</span><span class="s2">&quot;crop_residue_direct&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+        <span class="n">climatechange</span><span class="o">.</span><span class="n">total_residue_per_crop_direct</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">],</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">crop_emissions_dict</span><span class="p">[</span><span class="s2">&quot;N_direct_fertiliser&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+        <span class="n">climatechange</span><span class="o">.</span><span class="n">total_fertiliser_direct</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">],</span>
+            <span class="n">urea_proportion</span><span class="p">,</span>
+            <span class="n">urea_abated_proportion</span><span class="p">,</span>
+        <span class="p">)</span>
+        
+    <span class="p">)</span>
+    <span class="n">crop_emissions_dict</span><span class="p">[</span><span class="s2">&quot;N_indirect_fertiliser&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+        <span class="n">climatechange</span><span class="o">.</span><span class="n">total_fertiliser_indirect</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">],</span>
+            <span class="n">urea_proportion</span><span class="p">,</span>
+            <span class="n">urea_abated_proportion</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">crop_emissions_dict</span><span class="p">[</span><span class="s2">&quot;soils_N2O&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+        <span class="n">crop_emissions_dict</span><span class="p">[</span><span class="s2">&quot;crop_residue_direct&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">crop_emissions_dict</span><span class="p">[</span><span class="s2">&quot;N_direct_fertiliser&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">crop_emissions_dict</span><span class="p">[</span><span class="s2">&quot;N_indirect_fertiliser&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">crop_emissions_dict</span><span class="p">[</span><span class="s2">&quot;soils_CO2&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+        <span class="n">climatechange</span><span class="o">.</span><span class="n">urea_co2</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">],</span>
+            <span class="n">urea_proportion</span><span class="p">,</span>
+            <span class="n">urea_abated_proportion</span><span class="p">,</span>
+        <span class="p">)</span>
+        
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">crop_emissions_dict</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+
+</pre></div>
+</div>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Link to this heading"></a></h2>
+<p>This project is licensed under the terms of the MIT license.</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="autoapi/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Colm Duffy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
