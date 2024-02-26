@@ -1,0 +1,577 @@
+:py:mod:`crop_lca.models`
+=========================
+
+.. py:module:: crop_lca.models
+
+.. autoapi-nested-parse::
+
+   Models
+   ======
+   This module contains classes and functions for modeling crop data,
+   including crop characteristics, emissions factors, upstream impacts,
+   and fertilizer data. Key functionality includes:
+
+   * **DynamicData Classes:**  Flexible data structures to store crop, farm, and collections data.
+   * **CropChars:**  Management of crop characteristics (e.g., dry matter, nutrient content).
+   * **Emissions_Factors:** Storage and retrieval of emissions factors.
+   * **Upstream:**  Modeling of upstream environmental impacts.
+   * **Fertiliser:**  Handling fertilizer data and calculations.
+   * **Data Loading Functions:**  Loading data from various sources.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   crop_lca.models.DynamicData
+   crop_lca.models.CropCategory
+   crop_lca.models.CropCollection
+   crop_lca.models.Farm
+   crop_lca.models.CropChars
+   crop_lca.models.Emissions_Factors
+   crop_lca.models.Upstream
+   crop_lca.models.Fertiliser
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   crop_lca.models.load_crop_farm_data
+   crop_lca.models.load_farm_data
+   crop_lca.models.load_crop_chars_data
+   crop_lca.models.load_emissions_factors_data
+   crop_lca.models.load_upstream_data
+   crop_lca.models.load_fertiliser_data
+   crop_lca.models.print_crop_data
+
+
+
+.. py:class:: DynamicData(data, defaults={})
+
+
+   Bases: :py:obj:`object`
+
+   Provides a flexible data structure for storing attributes loaded from external sources.
+
+   Key Features:
+       * **Dynamic Attributes:** Attributes are not predefined; they are created based on the data provided during initialization.
+       * **Default Values:**  Assigns default values to attributes if not present in the input data.
+
+   Usage:
+       1. Instantiate with a data dictionary and an optional dictionary of defaults.
+       2. Access attributes directly using dot notation (e.g., `my_data.attribute_name`).
+
+
+.. py:class:: CropCategory(data)
+
+
+   Bases: :py:obj:`DynamicData`
+
+   Represents a single crop category with its associated attributes.
+
+   .. attribute:: kg_dm_per_ha
+
+      Kilograms of dry matter per hectare for the crop.
+
+      :type: float
+
+   .. attribute:: area
+
+      Area (in hectares) occupied by the crop.
+
+      :type: float
+
+
+.. py:class:: CropCollection(data)
+
+
+   Bases: :py:obj:`DynamicData`
+
+   Represents a collection of CropCategory objects.
+
+   Inherits the flexibility of the DynamicData class to accommodate varying crop data.
+
+
+.. py:class:: Farm(data)
+
+
+   Bases: :py:obj:`DynamicData`
+
+   Represents an agricultural farm with its associated attributes.
+
+   .. attribute:: \* **Dynamic Attributes
+
+      ** The specific attributes will depend on the data loaded.
+
+   .. attribute:: \* **crop_collections
+
+      ** A dictionary or other structure to store CropCollection objects related to the farm.
+
+      :type: optional
+
+
+.. py:class:: CropChars(data)
+
+
+   Bases: :py:obj:`object`
+
+   Stores and provides access to crop characteristics data.
+
+   .. attribute:: data_frame
+
+      The DataFrame containing the loaded crop characteristics.
+
+      :type: pandas.DataFrame
+
+   .. attribute:: crop_char
+
+      A dictionary mapping crop types to their characteristics.
+
+      :type: dict
+
+   .. py:method:: get_crop_dry_matter(crop_char)
+
+      Returns the dry matter content of the specified crop.
+
+      :param crop_char: The crop type.
+      :type crop_char: str
+
+      :returns: The dry matter content of the crop or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_crop_below_ground_ratio_to_above_ground_biomass(crop_char)
+
+      Returns the ratio of below ground biomass to above ground biomass for the specified crop.
+
+      :param crop_char: The crop type.
+      :type crop_char: str
+
+      :returns: The ratio of below ground biomass to above ground biomass or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_crop_above_ground_residue_dry_matter_to_harvested_yield(crop_char)
+
+      Returns the ratio of above ground residue dry matter to harvested yield for the specified crop.
+
+      :param crop_char: The crop type.
+      :type crop_char: str
+
+      :returns: The ratio of above ground residue dry matter to harvested yield or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_crop_n_content_below_ground(crop_char)
+
+      Returns the nitrogen content below ground for the specified crop.
+
+      :param crop_char: The crop type.
+      :type crop_char: str
+
+      :returns: The nitrogen content below ground or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_crop_n_content_of_above_ground_residues(crop_char)
+
+      Returns the nitrogen content of above ground residues for the specified crop.
+
+      :param crop_char: The crop type.
+      :type crop_char: str
+
+      :returns: The nitrogen content of above ground residues or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_crop_slope(crop_char)
+
+      Returns the slope of the crop for the specified crop.
+
+      :param crop_char: The crop type.
+      :type crop_char: str
+
+      :returns: The slope of the crop or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_crop_intercept(crop_char)
+
+      Returns the intercept of the crop for the specified crop.
+
+      :param crop_char: The crop type.
+      :type crop_char: str
+
+      :returns: The intercept of the crop or None if not found.
+      :rtype: float
+
+
+   .. py:method:: is_loaded()
+
+      Returns whether the crop characteristics data has been loaded.
+
+      :returns: True if the data has been loaded, False otherwise.
+      :rtype: bool
+
+
+
+.. py:class:: Emissions_Factors(data)
+
+
+   Bases: :py:obj:`object`
+
+   Stores and provides access to emissions factors data.
+
+   .. attribute:: data_frame
+
+      The DataFrame containing the loaded emissions factors.
+
+      :type: pandas.DataFrame
+
+   .. attribute:: emissions_factors
+
+      A dictionary mapping emissions factor names to their values.
+
+      :type: dict
+
+   .. py:method:: get_ef_emissions_factor_1_ipcc_2019()
+
+      Returns the value of the 'ef_emissions_factor_1_ipcc_2019' emissions factor.
+
+      :returns: The value of the emissions factor or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_ef_urea()
+
+       Returns the value of the 'ef_urea' emissions factor.
+
+      :returns: The value of the emissions factor or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_ef_urea_and_nbpt()
+
+      Returns the value of the 'ef_urea_and_nbpt' emissions factor.
+
+      :returns: The value of the emissions factor or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_ef_fracGASF_urea_fertilisers_to_nh3_and_nox()
+
+      Returns the value of the 'ef_fracGASF_urea_fertilisers_to_nh3_and_nox' emissions factor.
+
+      :returns: The value of the emissions factor or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_ef_fracGASF_urea_and_nbpt_to_nh3_and_nox()
+
+      Returns the value of the 'ef_fracGASF_urea_and_nbpt_to_nh3_and_nox' emissions factor.
+
+      :returns: The value of the emissions factor or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_ef_frac_leach_runoff()
+
+      Returns the value of the 'ef_frac_leach_runoff' emissions factor.
+
+      :returns: The value of the emissions factor or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_ef_ammonium_nitrate()
+
+      Returns the value of the 'ef_ammonium_nitrate' emissions factor.
+
+      :returns: The value of the emissions factor or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox()
+
+      Returns the value of the 'ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox' emissions factor.
+
+      :returns: The value of the emissions factor or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_ef_indirect_n2o_atmospheric_deposition_to_soils_and_water()
+
+      Returns the value of the 'ef_indirect_n2o_atmospheric_deposition_to_soils_and_water' emissions factor.
+
+      :returns: The value of the emissions factor or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_ef_indirect_n2o_from_leaching_and_runoff()
+
+      Returns the value of the 'ef_indirect_n2o_from_leaching_and_runoff' emissions factor.
+
+      :returns: The value of the emissions factor or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_ef_grassland_dm_t()
+
+      Returns the value of the 'ef_grassland_dm_t' emissions factor.
+
+      :returns: The value of the emissions factor or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_ef_dm_carbon_stock_crops()
+
+      Returns the value of the 'ef_dm_carbon_stock_crops' emissions factor.
+
+      :returns: The value of the emissions factor or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_ef_Frac_P_Leach()
+
+      Returns the value of the 'ef_Frac_P_Leach' emissions factor.
+
+      :returns: The value of the emissions factor or None if not found.
+      :rtype: float
+
+
+   .. py:method:: is_loaded()
+
+      Returns whether the emissions factors data has been loaded.
+
+      :returns: True if the data has been loaded, False otherwise.
+      :rtype: bool
+
+
+
+.. py:class:: Upstream(data)
+
+
+   Bases: :py:obj:`object`
+
+   Stores and provides access to upstream data.
+
+   .. attribute:: data_frame
+
+      The DataFrame containing the loaded upstream data.
+
+      :type: pandas.DataFrame
+
+   .. attribute:: upstream
+
+      A dictionary mapping upstream types to their values.
+
+      :type: dict
+
+   .. py:method:: get_upstream_fu(upstream_type)
+
+      Returns the functional unit of the specified upstream type.
+
+      :param upstream_type: The upstream type.
+      :type upstream_type: str
+
+      :returns: The functional unit of the upstream type or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_upstream_kg_co2e(upstream_type)
+
+      Returns the kg CO2e of the specified upstream type.
+
+      :param upstream_type: The upstream type.
+      :type upstream_type: str
+
+      :returns: The kg CO2e of the upstream type or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_upstream_kg_po4e(upstream_type)
+
+      Returns the kg PO4e of the specified upstream type.
+
+      :param upstream_type: The upstream type.
+      :type upstream_type: str
+
+      :returns: The kg PO4e of the upstream type or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_upstream_kg_so2e(upstream_type)
+
+      Returns the kg SO2e of the specified upstream type.
+
+      :param upstream_type: The upstream type.
+      :type upstream_type: str
+
+      :returns: The kg SO2e of the upstream type or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_upstream_mje(upstream_type)
+
+      Returns the MJE of the specified upstream type.
+
+      :param upstream_type: The upstream type.
+      :type upstream_type: str
+
+      :returns: The MJE of the upstream type or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_upstream_kg_sbe(upstream_type)
+
+      Returns the kg SBE of the specified upstream type.
+
+      :param upstream_type: The upstream type.
+      :type upstream_type: str
+
+      :returns: The kg SBE of the upstream type or None if not found.
+      :rtype: float
+
+
+   .. py:method:: is_loaded()
+
+      Returns whether the upstream data has been loaded.
+
+      :returns: True if the data has been loaded, False otherwise.
+      :rtype: bool
+
+
+
+.. py:class:: Fertiliser(data)
+
+
+   Bases: :py:obj:`object`
+
+   Stores and provides access to fertiliser data.
+
+   .. attribute:: data_frame
+
+      The DataFrame containing the loaded fertiliser data.
+
+      :type: pandas.DataFrame
+
+   .. attribute:: fertiliser
+
+      A dictionary mapping crop types to their fertiliser values.
+
+      :type: dict
+
+   .. py:method:: get_fert_kg_n_per_ha(fert_crop_type)
+
+      Returns the kg N per hectare for a specified crop type.
+
+      :param fert_crop_type: The crop type.
+      :type fert_crop_type: str
+
+      :returns: The kg N per hectare for the specified crop or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_fert_kg_p_per_ha(fert_crop_type)
+
+      Returns the kg P per hectare for a specified crop type.
+
+      :param fert_crop_type: The crop type.
+      :type fert_crop_type: str
+
+      :returns: The kg P per hectare for the specified crop or None if not found.
+      :rtype: float
+
+
+   .. py:method:: get_fert_kg_k_per_ha(fert_crop_type)
+
+      Returns the kg K per hectare for a specified crop type.
+
+      :param fert_crop_type: The crop type.
+      :type fert_crop_type: str
+
+      :returns: The kg K per hectare for the specified crop or None if not found.
+      :rtype: float
+
+
+   .. py:method:: is_loaded()
+
+      Returns whether the fertiliser data has been loaded.
+
+      :returns: True if the data has been loaded, False otherwise.
+      :rtype: bool
+
+
+
+.. py:function:: load_crop_farm_data(crop_type_dataframe)
+
+   Load crop type data into a collection of CropCategory and CropCollection objects.
+
+   :param crop_type_dataframe: The DataFrame containing the crop type data.
+   :type crop_type_dataframe: pandas.DataFrame
+
+   :returns: A dictionary containing the loaded crop type data.
+   :rtype: dict
+
+
+.. py:function:: load_farm_data(farm_data_frame)
+
+   Load farm data into a collection of Farm objects.
+
+   :param farm_data_frame: The DataFrame containing the farm data.
+   :type farm_data_frame: pandas.DataFrame
+
+   :returns: A dictionary containing the loaded farm data.
+   :rtype: dict
+
+
+.. py:function:: load_crop_chars_data()
+
+   Load crop characteristics data.
+
+   :returns: An instance of the CropChars class containing the loaded crop characteristics data.
+   :rtype: CropChars
+
+
+.. py:function:: load_emissions_factors_data(ef_country)
+
+   Load emissions factors data.
+
+   :param ef_country: The name of the country for which the data is being loaded.
+   :type ef_country: str
+
+   :returns: An instance of the Emissions_Factors class containing the loaded emissions factors data.
+   :rtype: Emissions_Factors
+
+
+.. py:function:: load_upstream_data()
+
+   Load upstream data.
+
+   :returns: An instance of the Upstream class containing the loaded upstream data.
+   :rtype: Upstream
+
+
+.. py:function:: load_fertiliser_data()
+
+   Load fertiliser data.
+
+   :returns: An instance of the Fertiliser class containing the loaded fertiliser data.
+   :rtype: Fertiliser
+
+
+.. py:function:: print_crop_data(data)
+
+   Print the crop data.
+
+   :param data: The crop data to print.
+   :type data: dict
+
+

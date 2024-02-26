@@ -1,0 +1,105 @@
+:py:mod:`crop_lca.geo_crop_lca.catchment_crop_production`
+=========================================================
+
+.. py:module:: crop_lca.geo_crop_lca.catchment_crop_production
+
+.. autoapi-nested-parse::
+
+   Catchment Crop Production
+   =========================
+   This module contains the CatchmentCropData class which is used to generate a dataframe of catchment crops and a dataframe of scenario crops.
+
+   In addition, the class also handles the generation of farm data (fertiliser inputs) for the crop LCA model.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   crop_lca.geo_crop_lca.catchment_crop_production.CatchmentCropData
+
+
+
+
+.. py:class:: CatchmentCropData
+
+
+   The CatchmentCropData class is used to generate a dataframe of catchment crops and a dataframe of scenario crops, as well as to generate farm data (fertiliser inputs) for the crop LCA model.
+
+   .. method:: gen_catchment_crop_production_dataframe(ef_country, catchment, year)
+
+      Returns a dataframe of catchment crops.
+
+
+   .. method:: gen_scenario_crop_production_dataframe(ef_country, catchment, calibration_year, target_year, scenario= None, crop_dataframe=None)
+
+      Returns a dataframe of scenario crops.
+
+
+   .. method:: gen_farm_data(crop_dataframe, urea_proportion, default_urea, default_urea_abated)
+
+      Returns a dataframe of farm data (fertiliser inputs).
+
+
+   .. py:method:: gen_catchment_crop_production_dataframe(ef_country, catchment, year)
+      :classmethod:
+
+      Returns a dataframe of catchment crops.
+
+      :param ef_country: The name of the country for which the data is being generated.
+      :type ef_country: str
+      :param catchment: The name of the catchment for which the data is being generated.
+      :type catchment: str
+      :param year: The year for which the data is being generated.
+      :type year: int
+
+      :returns: A dataframe of catchment crops.
+      :rtype: pandas.DataFrame
+
+
+   .. py:method:: gen_scenario_crop_production_dataframe(ef_country, catchment, calibration_year, target_year, scenario=None, crop_dataframe=None)
+      :classmethod:
+
+      Returns a dataframe of scenario crops.
+
+      :param ef_country: The name of the country for which the data is being generated.
+      :type ef_country: str
+      :param catchment: The name of the catchment for which the data is being generated.
+      :type catchment: str
+      :param calibration_year: The year for which the calibration data is being generated.
+      :type calibration_year: int
+      :param target_year: The year for which the scenario data is being generated.
+      :type target_year: int
+      :param scenario: The scenario for which the data is being generated. The default is None.
+      :type scenario: int, optional
+      :param crop_dataframe: A dataframe of crop data. The default is None.
+      :type crop_dataframe: pandas.DataFrame, optional
+
+      :returns: A dataframe of scenario crops.
+      :rtype: pandas.DataFrame
+
+
+   .. py:method:: gen_farm_data(crop_dataframe, urea_proportion, default_urea, default_urea_abated)
+      :classmethod:
+
+      Returns a dataframe of farm data (fertiliser inputs).
+
+      :param crop_dataframe: A dataframe of crop data.
+      :type crop_dataframe: pandas.DataFrame
+      :param urea_proportion: A dataframe of urea proportions.
+      :type urea_proportion: pandas.DataFrame
+      :param default_urea: The default urea proportion.
+      :type default_urea: float
+      :param default_urea_abated: The default urea abated proportion.
+      :type default_urea_abated: float
+
+      :returns: A dataframe of farm data (fertiliser inputs).
+      :rtype: pandas.DataFrame
+
+
+

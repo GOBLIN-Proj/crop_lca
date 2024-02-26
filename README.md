@@ -13,6 +13,22 @@
     -   N_indirect_fertiliser
     -   soils_CO2
 
+## Structure
+ The package is structured for use in national and catchment level analysis. 
+
+ The geo_crop_lca sub module is intended for use at the catchment level and interfaces with the catchment_data_api to 
+ retrieve catchment specific crop areas and types data that has been retrieved from [Ireland's National Land Cover map](https://www.epa.ie/our-services/monitoring--assessment/assessment/mapping/national-land-cover-map/) and merged with crop types using the [LUCAS land cover dataset](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=LUCAS_-_Land_use_and_land_cover_survey).
+
+ ```
+    src/
+    │
+    ├── crop_lca/
+        └── ... (other modules and sub-packages)
+        │
+        ├── geo_crop_lca/
+        |   └── ... (other modules and sub-packages)
+
+ ```
 ## Installation
 
 Install from git hub. 

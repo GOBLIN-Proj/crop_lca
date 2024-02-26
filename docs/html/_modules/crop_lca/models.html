@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crop_lca.models &mdash; Crop LCA 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=938c9ccc"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Crop LCA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Crop LCA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crop_lca.models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crop_lca.models</h1><div class="highlight"><pre>
+<span></span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Models</span>
+<span class="sd">======</span>
+<span class="sd">This module contains classes and functions for modeling crop data, </span>
+<span class="sd">including crop characteristics, emissions factors, upstream impacts, </span>
+<span class="sd">and fertilizer data. Key functionality includes:</span>
+
+<span class="sd">* **DynamicData Classes:**  Flexible data structures to store crop, farm, and collections data.</span>
+<span class="sd">* **CropChars:**  Management of crop characteristics (e.g., dry matter, nutrient content).</span>
+<span class="sd">* **Emissions_Factors:** Storage and retrieval of emissions factors.</span>
+<span class="sd">* **Upstream:**  Modeling of upstream environmental impacts.</span>
+<span class="sd">* **Fertiliser:**  Handling fertilizer data and calculations.</span>
+<span class="sd">* **Data Loading Functions:**  Loading data from various sources.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DynamicData">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.DynamicData">[docs]</a>
+<span class="k">class</span> <span class="nc">DynamicData</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides a flexible data structure for storing attributes loaded from external sources.</span>
+
+<span class="sd">    Key Features:</span>
+<span class="sd">        * **Dynamic Attributes:** Attributes are not predefined; they are created based on the data provided during initialization.</span>
+<span class="sd">        * **Default Values:**  Assigns default values to attributes if not present in the input data.</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        1. Instantiate with a data dictionary and an optional dictionary of defaults.</span>
+<span class="sd">        2. Access attributes directly using dot notation (e.g., `my_data.attribute_name`).  </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{}):</span>
+
+        <span class="c1"># Set the defaults first</span>
+        <span class="k">for</span> <span class="n">variable</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">defaults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># Overwrite the defaults with the real values</span>
+        <span class="k">for</span> <span class="n">variable</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="CropCategory">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.CropCategory">[docs]</a>
+<span class="k">class</span> <span class="nc">CropCategory</span><span class="p">(</span><span class="n">DynamicData</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a single crop category with its associated attributes.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">            kg_dm_per_ha (float):  Kilograms of dry matter per hectare for the crop.</span>
+<span class="sd">            area (float): Area (in hectares) occupied by the crop.</span>
+
+<span class="sd">   &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+
+        <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;kg_dm_per_ha&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;area&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">CropCategory</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">defaults</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="CropCollection">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.CropCollection">[docs]</a>
+<span class="k">class</span> <span class="nc">CropCollection</span><span class="p">(</span><span class="n">DynamicData</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a collection of CropCategory objects.</span>
+
+<span class="sd">    Inherits the flexibility of the DynamicData class to accommodate varying crop data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">CropCollection</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Farm">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Farm">[docs]</a>
+<span class="k">class</span> <span class="nc">Farm</span><span class="p">(</span><span class="n">DynamicData</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents an agricultural farm with its associated attributes.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        * **Dynamic Attributes:** The specific attributes will depend on the data loaded.</span>
+<span class="sd">        * **crop_collections (optional):** A dictionary or other structure to store CropCollection objects related to the farm.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span><span class="c1">#, crop_collections):</span>
+
+        <span class="c1">#self.crops = crop_collections.get(data.get(&quot;farm_id&quot;))</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">Farm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+
+<span class="c1">########################################################################################</span>
+<span class="c1"># Crop Chars class</span>
+<span class="c1">########################################################################################</span>
+<div class="viewcode-block" id="CropChars">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.CropChars">[docs]</a>
+<span class="k">class</span> <span class="nc">CropChars</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stores and provides access to crop characteristics data.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        data_frame (pandas.DataFrame): The DataFrame containing the loaded crop characteristics.</span>
+<span class="sd">        crop_char (dict): A dictionary mapping crop types to their characteristics.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span> <span class="o">=</span> <span class="n">data</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">crop_char</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+
+            <span class="n">crop_type</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;crop_type&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+            <span class="n">crop_dry_matter</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;crop_dry_matter&quot;</span><span class="p">)</span>
+            <span class="n">crop_below_ground_ratio_to_above_ground_biomass</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;crop_below_ground_ratio_to_above_ground_biomass&quot;</span>
+            <span class="p">)</span>
+            <span class="n">crop_above_ground_residue_dry_matter_to_harvested_yield</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;crop_above_ground_residue_dry_matter_to_harvested_yield&quot;</span>
+            <span class="p">)</span>
+            <span class="n">crop_n_content_below_ground</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;crop_n_content_below_ground&quot;</span><span class="p">)</span>
+            <span class="n">crop_n_content_of_above_ground_residues</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;crop_n_content_of_above_ground_residues&quot;</span>
+            <span class="p">)</span>
+            <span class="n">crop_slope</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;crop_slope&quot;</span><span class="p">)</span>
+            <span class="n">crop_intercept</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;crop_intercept&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">crop_char</span><span class="p">[</span><span class="n">crop_type</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;crop_dry_matter&quot;</span><span class="p">:</span> <span class="n">crop_dry_matter</span><span class="p">,</span>
+                <span class="s2">&quot;crop_below_ground_ratio_to_above_ground_biomass&quot;</span><span class="p">:</span> <span class="n">crop_below_ground_ratio_to_above_ground_biomass</span><span class="p">,</span>
+                <span class="s2">&quot;crop_above_ground_residue_dry_matter_to_harvested_yield&quot;</span><span class="p">:</span> <span class="n">crop_above_ground_residue_dry_matter_to_harvested_yield</span><span class="p">,</span>
+                <span class="s2">&quot;crop_n_content_below_ground&quot;</span><span class="p">:</span> <span class="n">crop_n_content_below_ground</span><span class="p">,</span>
+                <span class="s2">&quot;crop_n_content_of_above_ground_residues&quot;</span><span class="p">:</span> <span class="n">crop_n_content_of_above_ground_residues</span><span class="p">,</span>
+                <span class="s2">&quot;crop_slope&quot;</span><span class="p">:</span> <span class="n">crop_slope</span><span class="p">,</span>
+                <span class="s2">&quot;crop_intercept&quot;</span><span class="p">:</span> <span class="n">crop_intercept</span><span class="p">,</span>
+            <span class="p">}</span>
+
+<div class="viewcode-block" id="CropChars.get_crop_dry_matter">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.CropChars.get_crop_dry_matter">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_crop_dry_matter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_char</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the dry matter content of the specified crop.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            crop_char (str): The crop type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The dry matter content of the crop or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_char</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">crop_char</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;crop_dry_matter&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CropChars.get_crop_below_ground_ratio_to_above_ground_biomass">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.CropChars.get_crop_below_ground_ratio_to_above_ground_biomass">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_crop_below_ground_ratio_to_above_ground_biomass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_char</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the ratio of below ground biomass to above ground biomass for the specified crop.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            crop_char (str): The crop type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The ratio of below ground biomass to above ground biomass or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_char</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">crop_char</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;crop_below_ground_ratio_to_above_ground_biomass&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CropChars.get_crop_above_ground_residue_dry_matter_to_harvested_yield">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.CropChars.get_crop_above_ground_residue_dry_matter_to_harvested_yield">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_crop_above_ground_residue_dry_matter_to_harvested_yield</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_char</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the ratio of above ground residue dry matter to harvested yield for the specified crop.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            crop_char (str): The crop type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The ratio of above ground residue dry matter to harvested yield or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_char</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">crop_char</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;crop_above_ground_residue_dry_matter_to_harvested_yield&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CropChars.get_crop_n_content_below_ground">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.CropChars.get_crop_n_content_below_ground">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_crop_n_content_below_ground</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_char</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the nitrogen content below ground for the specified crop.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            crop_char (str): The crop type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The nitrogen content below ground or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_char</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">crop_char</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;crop_n_content_below_ground&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CropChars.get_crop_n_content_of_above_ground_residues">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.CropChars.get_crop_n_content_of_above_ground_residues">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_crop_n_content_of_above_ground_residues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_char</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the nitrogen content of above ground residues for the specified crop.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            crop_char (str): The crop type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The nitrogen content of above ground residues or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_char</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">crop_char</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;crop_n_content_of_above_ground_residues&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CropChars.get_crop_slope">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.CropChars.get_crop_slope">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_crop_slope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_char</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the slope of the crop for the specified crop.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            crop_char (str): The crop type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The slope of the crop or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_char</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">crop_char</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;crop_slope&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CropChars.get_crop_intercept">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.CropChars.get_crop_intercept">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_crop_intercept</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_char</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the intercept of the crop for the specified crop.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            crop_char (str): The crop type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The intercept of the crop or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_char</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">crop_char</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;crop_intercept&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CropChars.is_loaded">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.CropChars.is_loaded">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_loaded</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns whether the crop characteristics data has been loaded.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the data has been loaded, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
+<span class="c1">######################################################################################</span>
+<span class="c1"># Emissions Factors Data</span>
+<span class="c1">######################################################################################</span>
+<div class="viewcode-block" id="Emissions_Factors">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors">[docs]</a>
+<span class="k">class</span> <span class="nc">Emissions_Factors</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   Stores and provides access to emissions factors data.</span>
+
+<span class="sd">   Attributes:</span>
+<span class="sd">       data_frame (pandas.DataFrame): The DataFrame containing the loaded emissions factors.</span>
+<span class="sd">       emissions_factors (dict): A dictionary mapping emissions factor names to their values.</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span> <span class="o">=</span> <span class="n">data</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+
+            <span class="n">ef_emissions_factor_1_ipcc_2019</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_emissions_factor_1_ipcc_2019&quot;</span><span class="p">)</span>
+            <span class="n">ef_urea</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_urea&quot;</span><span class="p">)</span>
+            <span class="n">ef_urea_and_nbpt</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_urea_and_nbpt&quot;</span><span class="p">)</span>
+            <span class="n">ef_fracGASF_urea_fertilisers_to_nh3_and_nox</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;ef_fracGASF_urea_fertilisers_to_nh3_and_nox&quot;</span>
+            <span class="p">)</span>
+            <span class="n">ef_fracGASF_urea_and_nbpt_to_nh3_and_nox</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;ef_fracGASF_urea_and_nbpt_to_nh3_and_nox&quot;</span>
+            <span class="p">)</span>
+            <span class="n">ef_frac_leach_runoff</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_frac_leach_runoff&quot;</span><span class="p">)</span>
+            <span class="n">ef_ammonium_nitrate</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_ammonium_nitrate&quot;</span><span class="p">)</span>
+            <span class="n">ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox&quot;</span>
+            <span class="p">)</span>
+            <span class="n">ef_indirect_n2o_atmospheric_deposition_to_soils_and_water</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;ef_indirect_n2o_atmospheric_deposition_to_soils_and_water&quot;</span>
+            <span class="p">)</span>
+            <span class="n">ef_indirect_n2o_from_leaching_and_runoff</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;ef_indirect_n2o_from_leaching_and_runoff&quot;</span>
+            <span class="p">)</span>
+            <span class="n">ef_grassland_dm_t</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_grassland_dm_t&quot;</span><span class="p">)</span>
+            <span class="n">ef_dm_carbon_stock_crops</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_dm_carbon_stock_crops&quot;</span><span class="p">)</span>
+            <span class="n">ef_Frac_P_Leach</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_Frac_P_Leach&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;ef_emissions_factor_1_ipcc_2019&quot;</span><span class="p">:</span> <span class="n">ef_emissions_factor_1_ipcc_2019</span><span class="p">,</span>
+                <span class="s2">&quot;ef_urea&quot;</span><span class="p">:</span> <span class="n">ef_urea</span><span class="p">,</span>
+                <span class="s2">&quot;ef_urea_and_nbpt&quot;</span><span class="p">:</span> <span class="n">ef_urea_and_nbpt</span><span class="p">,</span>
+                <span class="s2">&quot;ef_fracGASF_urea_fertilisers_to_nh3_and_nox&quot;</span><span class="p">:</span> <span class="n">ef_fracGASF_urea_fertilisers_to_nh3_and_nox</span><span class="p">,</span>
+                <span class="s2">&quot;ef_fracGASF_urea_and_nbpt_to_nh3_and_nox&quot;</span><span class="p">:</span> <span class="n">ef_fracGASF_urea_and_nbpt_to_nh3_and_nox</span><span class="p">,</span>
+                <span class="s2">&quot;ef_frac_leach_runoff&quot;</span><span class="p">:</span> <span class="n">ef_frac_leach_runoff</span><span class="p">,</span>
+                <span class="s2">&quot;ef_ammonium_nitrate&quot;</span><span class="p">:</span> <span class="n">ef_ammonium_nitrate</span><span class="p">,</span>
+                <span class="s2">&quot;ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox&quot;</span><span class="p">:</span> <span class="n">ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox</span><span class="p">,</span>
+                <span class="s2">&quot;ef_indirect_n2o_atmospheric_deposition_to_soils_and_water&quot;</span><span class="p">:</span> <span class="n">ef_indirect_n2o_atmospheric_deposition_to_soils_and_water</span><span class="p">,</span>
+                <span class="s2">&quot;ef_indirect_n2o_from_leaching_and_runoff&quot;</span><span class="p">:</span> <span class="n">ef_indirect_n2o_from_leaching_and_runoff</span><span class="p">,</span>
+                <span class="s2">&quot;ef_grassland_dm_t&quot;</span><span class="p">:</span> <span class="n">ef_grassland_dm_t</span><span class="p">,</span>
+                <span class="s2">&quot;ef_dm_carbon_stock_crops&quot;</span><span class="p">:</span> <span class="n">ef_dm_carbon_stock_crops</span><span class="p">,</span>
+                <span class="s2">&quot;ef_Frac_P_Leach&quot;</span><span class="p">:</span> <span class="n">ef_Frac_P_Leach</span><span class="p">,</span>
+            <span class="p">}</span>
+
+<div class="viewcode-block" id="Emissions_Factors.get_ef_emissions_factor_1_ipcc_2019">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.get_ef_emissions_factor_1_ipcc_2019">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ef_emissions_factor_1_ipcc_2019</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Returns the value of the &#39;ef_emissions_factor_1_ipcc_2019&#39; emissions factor.</span>
+
+<span class="sd">       Returns:</span>
+<span class="sd">           float: The value of the emissions factor or None if not found.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;ef_emissions_factor_1_ipcc_2019&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Emissions_Factors.get_ef_urea">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.get_ef_urea">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ef_urea</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Returns the value of the &#39;ef_urea&#39; emissions factor.</span>
+
+<span class="sd">        Returns:    </span>
+<span class="sd">            float: The value of the emissions factor or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_urea&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Emissions_Factors.get_ef_urea_and_nbpt">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.get_ef_urea_and_nbpt">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ef_urea_and_nbpt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the value of the &#39;ef_urea_and_nbpt&#39; emissions factor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The value of the emissions factor or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_urea_and_nbpt&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Emissions_Factors.get_ef_fracGASF_urea_fertilisers_to_nh3_and_nox">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.get_ef_fracGASF_urea_fertilisers_to_nh3_and_nox">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ef_fracGASF_urea_fertilisers_to_nh3_and_nox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the value of the &#39;ef_fracGASF_urea_fertilisers_to_nh3_and_nox&#39; emissions factor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The value of the emissions factor or None if not found.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;ef_fracGASF_urea_fertilisers_to_nh3_and_nox&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Emissions_Factors.get_ef_fracGASF_urea_and_nbpt_to_nh3_and_nox">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.get_ef_fracGASF_urea_and_nbpt_to_nh3_and_nox">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ef_fracGASF_urea_and_nbpt_to_nh3_and_nox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the value of the &#39;ef_fracGASF_urea_and_nbpt_to_nh3_and_nox&#39; emissions factor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The value of the emissions factor or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;ef_fracGASF_urea_and_nbpt_to_nh3_and_nox&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Emissions_Factors.get_ef_frac_leach_runoff">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.get_ef_frac_leach_runoff">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ef_frac_leach_runoff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the value of the &#39;ef_frac_leach_runoff&#39; emissions factor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The value of the emissions factor or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_frac_leach_runoff&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Emissions_Factors.get_ef_ammonium_nitrate">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.get_ef_ammonium_nitrate">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ef_ammonium_nitrate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the value of the &#39;ef_ammonium_nitrate&#39; emissions factor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The value of the emissions factor or None if not found.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_ammonium_nitrate&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Emissions_Factors.get_ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.get_ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the value of the &#39;ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox&#39; emissions factor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The value of the emissions factor or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Emissions_Factors.get_ef_indirect_n2o_atmospheric_deposition_to_soils_and_water">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.get_ef_indirect_n2o_atmospheric_deposition_to_soils_and_water">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ef_indirect_n2o_atmospheric_deposition_to_soils_and_water</span><span class="p">(</span>
+        <span class="bp">self</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the value of the &#39;ef_indirect_n2o_atmospheric_deposition_to_soils_and_water&#39; emissions factor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The value of the emissions factor or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;ef_indirect_n2o_atmospheric_deposition_to_soils_and_water&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Emissions_Factors.get_ef_indirect_n2o_from_leaching_and_runoff">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.get_ef_indirect_n2o_from_leaching_and_runoff">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ef_indirect_n2o_from_leaching_and_runoff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the value of the &#39;ef_indirect_n2o_from_leaching_and_runoff&#39; emissions factor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The value of the emissions factor or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;ef_indirect_n2o_from_leaching_and_runoff&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Emissions_Factors.get_ef_grassland_dm_t">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.get_ef_grassland_dm_t">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ef_grassland_dm_t</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the value of the &#39;ef_grassland_dm_t&#39; emissions factor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The value of the emissions factor or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_grassland_dm_t&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Emissions_Factors.get_ef_dm_carbon_stock_crops">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.get_ef_dm_carbon_stock_crops">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ef_dm_carbon_stock_crops</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the value of the &#39;ef_dm_carbon_stock_crops&#39; emissions factor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The value of the emissions factor or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;ef_dm_carbon_stock_crops&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Emissions_Factors.get_ef_Frac_P_Leach">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.get_ef_Frac_P_Leach">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ef_Frac_P_Leach</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the value of the &#39;ef_Frac_P_Leach&#39; emissions factor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The value of the emissions factor or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ef_Frac_P_Leach&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Emissions_Factors.is_loaded">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Emissions_Factors.is_loaded">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_loaded</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns whether the emissions factors data has been loaded.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the data has been loaded, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
+<span class="c1">########################################################################################</span>
+<span class="c1"># Upstream class</span>
+<span class="c1">########################################################################################</span>
+<div class="viewcode-block" id="Upstream">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Upstream">[docs]</a>
+<span class="k">class</span> <span class="nc">Upstream</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stores and provides access to upstream data.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        data_frame (pandas.DataFrame): The DataFrame containing the loaded upstream data.</span>
+<span class="sd">        upstream (dict): A dictionary mapping upstream types to their values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span> <span class="o">=</span> <span class="n">data</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+
+            <span class="n">upstream_type</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upstream_type&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+            <span class="n">upstream_fu</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upstream_fu&quot;</span><span class="p">)</span>
+            <span class="n">upstream_kg_co2e</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upstream_kg_co2e&quot;</span><span class="p">)</span>
+            <span class="n">upstream_kg_po4e</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upstream_kg_po4e&quot;</span><span class="p">)</span>
+            <span class="n">upstream_kg_so2e</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upstream_kg_so2e&quot;</span><span class="p">)</span>
+            <span class="n">upstream_mje</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upstream_mje&quot;</span><span class="p">)</span>
+            <span class="n">upstream_kg_sbe</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upstream_kg_sbe&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">upstream_type</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;upstream_fu&quot;</span><span class="p">:</span> <span class="n">upstream_fu</span><span class="p">,</span>
+                <span class="s2">&quot;upstream_kg_co2e&quot;</span><span class="p">:</span> <span class="n">upstream_kg_co2e</span><span class="p">,</span>
+                <span class="s2">&quot;upstream_kg_po4e&quot;</span><span class="p">:</span> <span class="n">upstream_kg_po4e</span><span class="p">,</span>
+                <span class="s2">&quot;upstream_kg_so2e&quot;</span><span class="p">:</span> <span class="n">upstream_kg_so2e</span><span class="p">,</span>
+                <span class="s2">&quot;upstream_mje&quot;</span><span class="p">:</span> <span class="n">upstream_mje</span><span class="p">,</span>
+                <span class="s2">&quot;upstream_kg_sbe&quot;</span><span class="p">:</span> <span class="n">upstream_kg_sbe</span><span class="p">,</span>
+            <span class="p">}</span>
+
+<div class="viewcode-block" id="Upstream.get_upstream_fu">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Upstream.get_upstream_fu">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_upstream_fu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upstream_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the functional unit of the specified upstream type.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            upstream_type (str): The upstream type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The functional unit of the upstream type or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">upstream_type</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upstream_fu&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Upstream.get_upstream_kg_co2e">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Upstream.get_upstream_kg_co2e">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_upstream_kg_co2e</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upstream_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the kg CO2e of the specified upstream type.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            upstream_type (str): The upstream type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The kg CO2e of the upstream type or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">upstream_type</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upstream_kg_co2e&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Upstream.get_upstream_kg_po4e">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Upstream.get_upstream_kg_po4e">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_upstream_kg_po4e</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upstream_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the kg PO4e of the specified upstream type.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            upstream_type (str): The upstream type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The kg PO4e of the upstream type or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">upstream_type</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upstream_kg_po4e&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Upstream.get_upstream_kg_so2e">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Upstream.get_upstream_kg_so2e">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_upstream_kg_so2e</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upstream_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the kg SO2e of the specified upstream type.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            upstream_type (str): The upstream type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The kg SO2e of the upstream type or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">upstream_type</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upstream_kg_so2e&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Upstream.get_upstream_mje">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Upstream.get_upstream_mje">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_upstream_mje</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upstream_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the MJE of the specified upstream type.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            upstream_type (str): The upstream type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The MJE of the upstream type or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">upstream_type</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upstream_mje&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Upstream.get_upstream_kg_sbe">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Upstream.get_upstream_kg_sbe">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_upstream_kg_sbe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upstream_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the kg SBE of the specified upstream type.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            upstream_type (str): The upstream type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The kg SBE of the upstream type or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">upstream_type</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upstream_kg_sbe&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Upstream.is_loaded">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Upstream.is_loaded">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_loaded</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns whether the upstream data has been loaded.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the data has been loaded, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+        
+<span class="c1">#############################################################################################</span>
+<span class="c1"># Fertiliser class</span>
+<span class="c1">########################################################################################</span>
+<div class="viewcode-block" id="Fertiliser">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Fertiliser">[docs]</a>
+<span class="k">class</span> <span class="nc">Fertiliser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stores and provides access to fertiliser data.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        data_frame (pandas.DataFrame): The DataFrame containing the loaded fertiliser data.</span>
+<span class="sd">        fertiliser (dict): A dictionary mapping crop types to their fertiliser values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span> <span class="o">=</span> <span class="n">data</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fertiliser</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+
+            <span class="n">fert_crop_type</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fert_crop_type&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+            <span class="n">fert_kg_n_per_ha</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fert_kg_n_per_ha&quot;</span><span class="p">)</span>
+            <span class="n">fert_kg_p_per_ha</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fert_kg_p_per_ha&quot;</span><span class="p">)</span>
+            <span class="n">fert_kg_k_per_ha</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fert_kg_k_per_ha&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">fertiliser</span><span class="p">[</span><span class="n">fert_crop_type</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;fert_kg_n_per_ha&quot;</span><span class="p">:</span> <span class="n">fert_kg_n_per_ha</span><span class="p">,</span>
+                <span class="s2">&quot;fert_kg_p_per_ha&quot;</span><span class="p">:</span> <span class="n">fert_kg_p_per_ha</span><span class="p">,</span>
+                <span class="s2">&quot;fert_kg_k_per_ha&quot;</span><span class="p">:</span> <span class="n">fert_kg_k_per_ha</span><span class="p">,</span>
+            <span class="p">}</span>
+
+<div class="viewcode-block" id="Fertiliser.get_fert_kg_n_per_ha">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Fertiliser.get_fert_kg_n_per_ha">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fert_kg_n_per_ha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fert_crop_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the kg N per hectare for a specified crop type.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            fert_crop_type (str): The crop type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The kg N per hectare for the specified crop or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">crop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fertiliser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">fert_crop_type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">crop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fertiliser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;average&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fert_kg_n_per_ha&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">crop</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fert_kg_n_per_ha&quot;</span><span class="p">)</span></div>
+
+    
+
+<div class="viewcode-block" id="Fertiliser.get_fert_kg_p_per_ha">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Fertiliser.get_fert_kg_p_per_ha">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fert_kg_p_per_ha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fert_crop_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the kg P per hectare for a specified crop type.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            fert_crop_type (str): The crop type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The kg P per hectare for the specified crop or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">crop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fertiliser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">fert_crop_type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">crop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fertiliser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;average&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fert_kg_p_per_ha&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">crop</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fert_kg_p_per_ha&quot;</span><span class="p">)</span></div>
+
+    
+
+<div class="viewcode-block" id="Fertiliser.get_fert_kg_k_per_ha">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Fertiliser.get_fert_kg_k_per_ha">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fert_kg_k_per_ha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fert_crop_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the kg K per hectare for a specified crop type.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            fert_crop_type (str): The crop type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The kg K per hectare for the specified crop or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">crop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fertiliser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">fert_crop_type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">crop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fertiliser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;average&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fert_kg_k_per_ha&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">crop</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fert_kg_k_per_ha&quot;</span><span class="p">)</span></div>
+
+    
+
+<div class="viewcode-block" id="Fertiliser.is_loaded">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.Fertiliser.is_loaded">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_loaded</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns whether the fertiliser data has been loaded.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the data has been loaded, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+        
+<span class="c1">################################################################################################</span>
+<span class="c1"># Data Loading</span>
+<span class="c1">################################################################################################</span>
+
+
+<div class="viewcode-block" id="load_crop_farm_data">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.load_crop_farm_data">[docs]</a>
+<span class="k">def</span> <span class="nf">load_crop_farm_data</span><span class="p">(</span><span class="n">crop_type_dataframe</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load crop type data into a collection of CropCategory and CropCollection objects.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    crop_type_dataframe : pandas.DataFrame</span>
+<span class="sd">        The DataFrame containing the crop type data.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A dictionary containing the loaded crop type data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># 1. Load each animal category into an object</span>
+
+    <span class="n">categories</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">crop_type_dataframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">x</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+        <span class="n">categories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CropCategory</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+    <span class="c1"># 2. Aggregate the animal categories into collection based on the farm ID</span>
+
+    <span class="n">collections</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">:</span>
+
+        <span class="n">farm_id</span> <span class="o">=</span> <span class="n">category</span><span class="o">.</span><span class="n">farm_id</span>
+
+        <span class="n">crop_type</span> <span class="o">=</span> <span class="n">category</span><span class="o">.</span><span class="n">crop_type</span>
+
+        <span class="k">if</span> <span class="n">farm_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">collections</span><span class="p">:</span>
+            <span class="n">collections</span><span class="p">[</span><span class="n">farm_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">crop_type</span><span class="p">:</span> <span class="n">category</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">collections</span><span class="p">[</span><span class="n">farm_id</span><span class="p">][</span><span class="n">crop_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">category</span>
+
+    <span class="c1"># 3. Convert the raw collection data into animal collection objects</span>
+
+    <span class="n">collection_objects</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">farm_id</span><span class="p">,</span> <span class="n">raw_data</span> <span class="ow">in</span> <span class="n">collections</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">collection_objects</span><span class="p">[</span><span class="n">farm_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;crop_group&quot;</span><span class="p">:</span><span class="n">CropCollection</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)}</span>
+
+    <span class="k">return</span> <span class="n">collection_objects</span></div>
+
+
+
+<div class="viewcode-block" id="load_farm_data">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.load_farm_data">[docs]</a>
+<span class="k">def</span> <span class="nf">load_farm_data</span><span class="p">(</span><span class="n">farm_data_frame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load farm data into a collection of Farm objects.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    farm_data_frame : pandas.DataFrame</span>
+<span class="sd">        The DataFrame containing the farm data.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A dictionary containing the loaded farm data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;diesel_kg&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;elec_kwh&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">farm_data_frame</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">subset</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">scenario_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">farm_data_frame</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">x</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+        <span class="n">scenario_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Farm</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+        <span class="c1">#keys.append(row.get(&quot;farm_id&quot;))</span>
+
+    <span class="c1">#collections ={}</span>
+
+    <span class="c1">#for _, sc in scenario_list:</span>
+        <span class="c1">#collections[sc] = scenario_list[sc]</span>
+
+    <span class="c1">#return dict(enumerate(scenario_list))</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">x</span><span class="o">.</span><span class="n">farm_id</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">scenario_list</span><span class="p">])</span></div>
+
+<span class="c1">####################################################################################################</span>
+<span class="c1"># Load Additional Databases</span>
+<span class="c1">####################################################################################################</span>
+
+
+<div class="viewcode-block" id="load_crop_chars_data">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.load_crop_chars_data">[docs]</a>
+<span class="k">def</span> <span class="nf">load_crop_chars_data</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load crop characteristics data.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    CropChars</span>
+<span class="sd">        An instance of the CropChars class containing the loaded crop characteristics data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">CropChars</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="load_emissions_factors_data">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.load_emissions_factors_data">[docs]</a>
+<span class="k">def</span> <span class="nf">load_emissions_factors_data</span><span class="p">(</span><span class="n">ef_country</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load emissions factors data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ef_country : str</span>
+<span class="sd">        The name of the country for which the data is being loaded.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Emissions_Factors</span>
+<span class="sd">        An instance of the Emissions_Factors class containing the loaded emissions factors data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Emissions_Factors</span><span class="p">(</span><span class="n">ef_country</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="load_upstream_data">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.load_upstream_data">[docs]</a>
+<span class="k">def</span> <span class="nf">load_upstream_data</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load upstream data.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Upstream</span>
+<span class="sd">        An instance of the Upstream class containing the loaded upstream data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Upstream</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="load_fertiliser_data">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.load_fertiliser_data">[docs]</a>
+<span class="k">def</span> <span class="nf">load_fertiliser_data</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load fertiliser data.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Fertiliser</span>
+<span class="sd">        An instance of the Fertiliser class containing the loaded fertiliser data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Fertiliser</span><span class="p">()</span></div>
+
+
+
+
+<div class="viewcode-block" id="print_crop_data">
+<a class="viewcode-back" href="../../autoapi/crop_lca/models/index.html#crop_lca.models.print_crop_data">[docs]</a>
+<span class="k">def</span> <span class="nf">print_crop_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Print the crop data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : dict</span>
+<span class="sd">        The crop data to print.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">crops</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">crop</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">crops</span><span class="p">)</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">crops</span><span class="p">)</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">crop</span><span class="p">)</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">crop</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">attribute</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">crops</span><span class="p">)</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">crop</span><span class="p">)</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">attribute</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Colm Duffy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

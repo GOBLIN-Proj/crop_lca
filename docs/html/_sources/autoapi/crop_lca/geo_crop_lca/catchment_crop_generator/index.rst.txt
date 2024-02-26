@@ -1,0 +1,74 @@
+:py:mod:`crop_lca.geo_crop_lca.catchment_crop_generator`
+========================================================
+
+.. py:module:: crop_lca.geo_crop_lca.catchment_crop_generator
+
+.. autoapi-nested-parse::
+
+   Catchment Crop Generator
+   ========================
+   This module contains the CatchmentCropGenerator class which is used to generate a dataframe of catchment crops.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   crop_lca.geo_crop_lca.catchment_crop_generator.CatchmentCropGenerator
+
+
+
+
+.. py:class:: CatchmentCropGenerator(ef_country, catchment)
+
+
+   The CatchmentCropGenerator class is used to generate a dataframe of catchment crops.
+
+   .. attribute:: crop_data_manager
+
+      An instance of the CropDataManager class used to manage the crop data.
+
+      :type: CropDataManager
+
+   .. attribute:: catchment
+
+      The name of the catchment for which the data is being generated.
+
+      :type: str
+
+   .. attribute:: ef_country
+
+      The name of the country for which the data is being generated.
+
+      :type: str
+
+   .. attribute:: loader
+
+      An instance of the Loader class used to load data from the database.
+
+      :type: Loader
+
+   .. attribute:: crops_api
+
+      An instance of the Crops class used to access the catchment data.
+
+      :type: Crops
+
+   .. method:: gen_catchment_crop_dataframe()
+
+      Returns a dataframe of catchment crops.
+
+   .. py:method:: gen_catchment_crop_dataframe()
+
+      Returns a dataframe of catchment crops.
+
+      :returns: A dataframe of catchment crops.
+      :rtype: pandas.DataFrame
+
+
+

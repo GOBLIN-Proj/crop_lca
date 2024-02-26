@@ -14,6 +14,8 @@ def main():
             df = NationalCropData.gen_scenario_crop_production_dataframe(calibration_year, target_year, sc, df)
         else:
             df = NationalCropData.gen_scenario_crop_production_dataframe(calibration_year, target_year, sc)
+   
+   
     data = {"Scenarios":[0,1,2],
             "Urea proportion":[0.2,0.2,0.3],
             "Urea abated proportion": [0.1,0,0]}

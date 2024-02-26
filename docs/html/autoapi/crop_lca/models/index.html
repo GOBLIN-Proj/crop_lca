@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crop_lca.models &mdash; Crop LCA 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=938c9ccc"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="crop_lca.national_crop_production" href="../national_crop_production/index.html" />
+    <link rel="prev" title="crop_lca.lca" href="../lca/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Crop LCA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crop_lca</span></code></a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../index.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../lca/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crop_lca.lca</span></code></a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crop_lca.models</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../national_crop_production/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crop_lca.national_crop_production</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Crop LCA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crop_lca</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crop_lca.models</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/autoapi/crop_lca/models/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-crop_lca.models">
+<span id="crop-lca-models"></span><h1><a class="reference internal" href="#module-crop_lca.models" title="crop_lca.models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crop_lca.models</span></code></a><a class="headerlink" href="#module-crop_lca.models" title="Link to this heading"></a></h1>
+<section id="models">
+<p>This module contains classes and functions for modeling crop data,
+including crop characteristics, emissions factors, upstream impacts,
+and fertilizer data. Key functionality includes:</p>
+<ul class="simple">
+<li><p><strong>DynamicData Classes:</strong>  Flexible data structures to store crop, farm, and collections data.</p></li>
+<li><p><strong>CropChars:</strong>  Management of crop characteristics (e.g., dry matter, nutrient content).</p></li>
+<li><p><strong>Emissions_Factors:</strong> Storage and retrieval of emissions factors.</p></li>
+<li><p><strong>Upstream:</strong>  Modeling of upstream environmental impacts.</p></li>
+<li><p><strong>Fertiliser:</strong>  Handling fertilizer data and calculations.</p></li>
+<li><p><strong>Data Loading Functions:</strong>  Loading data from various sources.</p></li>
+</ul>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#crop_lca.models.DynamicData" title="crop_lca.models.DynamicData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DynamicData</span></code></a></p></td>
+<td><p>Provides a flexible data structure for storing attributes loaded from external sources.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#crop_lca.models.CropCategory" title="crop_lca.models.CropCategory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CropCategory</span></code></a></p></td>
+<td><p>Represents a single crop category with its associated attributes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#crop_lca.models.CropCollection" title="crop_lca.models.CropCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CropCollection</span></code></a></p></td>
+<td><p>Represents a collection of CropCategory objects.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#crop_lca.models.Farm" title="crop_lca.models.Farm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Farm</span></code></a></p></td>
+<td><p>Represents an agricultural farm with its associated attributes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#crop_lca.models.CropChars" title="crop_lca.models.CropChars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CropChars</span></code></a></p></td>
+<td><p>Stores and provides access to crop characteristics data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#crop_lca.models.Emissions_Factors" title="crop_lca.models.Emissions_Factors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Emissions_Factors</span></code></a></p></td>
+<td><p>Stores and provides access to emissions factors data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#crop_lca.models.Upstream" title="crop_lca.models.Upstream"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Upstream</span></code></a></p></td>
+<td><p>Stores and provides access to upstream data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#crop_lca.models.Fertiliser" title="crop_lca.models.Fertiliser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Fertiliser</span></code></a></p></td>
+<td><p>Stores and provides access to fertiliser data.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#crop_lca.models.load_crop_farm_data" title="crop_lca.models.load_crop_farm_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_crop_farm_data</span></code></a>(crop_type_dataframe)</p></td>
+<td><p>Load crop type data into a collection of CropCategory and CropCollection objects.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#crop_lca.models.load_farm_data" title="crop_lca.models.load_farm_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_farm_data</span></code></a>(farm_data_frame)</p></td>
+<td><p>Load farm data into a collection of Farm objects.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#crop_lca.models.load_crop_chars_data" title="crop_lca.models.load_crop_chars_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_crop_chars_data</span></code></a>()</p></td>
+<td><p>Load crop characteristics data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#crop_lca.models.load_emissions_factors_data" title="crop_lca.models.load_emissions_factors_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_emissions_factors_data</span></code></a>(ef_country)</p></td>
+<td><p>Load emissions factors data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#crop_lca.models.load_upstream_data" title="crop_lca.models.load_upstream_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_upstream_data</span></code></a>()</p></td>
+<td><p>Load upstream data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#crop_lca.models.load_fertiliser_data" title="crop_lca.models.load_fertiliser_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_fertiliser_data</span></code></a>()</p></td>
+<td><p>Load fertiliser data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#crop_lca.models.print_crop_data" title="crop_lca.models.print_crop_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_crop_data</span></code></a>(data)</p></td>
+<td><p>Print the crop data.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="crop_lca.models.DynamicData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">DynamicData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaults</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#DynamicData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.DynamicData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Provides a flexible data structure for storing attributes loaded from external sources.</p>
+<dl class="simple">
+<dt>Key Features:</dt><dd><ul class="simple">
+<li><p><strong>Dynamic Attributes:</strong> Attributes are not predefined; they are created based on the data provided during initialization.</p></li>
+<li><p><strong>Default Values:</strong>  Assigns default values to attributes if not present in the input data.</p></li>
+</ul>
+</dd>
+<dt>Usage:</dt><dd><ol class="arabic simple">
+<li><p>Instantiate with a data dictionary and an optional dictionary of defaults.</p></li>
+<li><p>Access attributes directly using dot notation (e.g., <cite>my_data.attribute_name</cite>).</p></li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="crop_lca.models.CropCategory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">CropCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#CropCategory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.CropCategory" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#crop_lca.models.DynamicData" title="crop_lca.models.DynamicData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DynamicData</span></code></a></p>
+<p>Represents a single crop category with its associated attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crop_lca.models.CropCategory.kg_dm_per_ha">
+<span class="sig-name descname"><span class="pre">kg_dm_per_ha</span></span><a class="headerlink" href="#crop_lca.models.CropCategory.kg_dm_per_ha" title="Link to this definition"></a></dt>
+<dd><p>Kilograms of dry matter per hectare for the crop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crop_lca.models.CropCategory.area">
+<span class="sig-name descname"><span class="pre">area</span></span><a class="headerlink" href="#crop_lca.models.CropCategory.area" title="Link to this definition"></a></dt>
+<dd><p>Area (in hectares) occupied by the crop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="crop_lca.models.CropCollection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">CropCollection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#CropCollection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.CropCollection" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#crop_lca.models.DynamicData" title="crop_lca.models.DynamicData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DynamicData</span></code></a></p>
+<p>Represents a collection of CropCategory objects.</p>
+<p>Inherits the flexibility of the DynamicData class to accommodate varying crop data.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="crop_lca.models.Farm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">Farm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Farm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Farm" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#crop_lca.models.DynamicData" title="crop_lca.models.DynamicData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DynamicData</span></code></a></p>
+<p>Represents an agricultural farm with its associated attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">\*</span> <span class="pre">**Dynamic</span> <span class="pre">Attributes</span></span></dt>
+<dd><p>** The specific attributes will depend on the data loaded.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">\*</span> <span class="pre">**crop_collections</span></span></dt>
+<dd><p>** A dictionary or other structure to store CropCollection objects related to the farm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="crop_lca.models.CropChars">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">CropChars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#CropChars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.CropChars" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Stores and provides access to crop characteristics data.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crop_lca.models.CropChars.data_frame">
+<span class="sig-name descname"><span class="pre">data_frame</span></span><a class="headerlink" href="#crop_lca.models.CropChars.data_frame" title="Link to this definition"></a></dt>
+<dd><p>The DataFrame containing the loaded crop characteristics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crop_lca.models.CropChars.crop_char">
+<span class="sig-name descname"><span class="pre">crop_char</span></span><a class="headerlink" href="#crop_lca.models.CropChars.crop_char" title="Link to this definition"></a></dt>
+<dd><p>A dictionary mapping crop types to their characteristics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.CropChars.get_crop_dry_matter">
+<span class="sig-name descname"><span class="pre">get_crop_dry_matter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crop_char</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#CropChars.get_crop_dry_matter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.CropChars.get_crop_dry_matter" title="Link to this definition"></a></dt>
+<dd><p>Returns the dry matter content of the specified crop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>crop_char</strong> (<em>str</em>) – The crop type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The dry matter content of the crop or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.CropChars.get_crop_below_ground_ratio_to_above_ground_biomass">
+<span class="sig-name descname"><span class="pre">get_crop_below_ground_ratio_to_above_ground_biomass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crop_char</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#CropChars.get_crop_below_ground_ratio_to_above_ground_biomass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.CropChars.get_crop_below_ground_ratio_to_above_ground_biomass" title="Link to this definition"></a></dt>
+<dd><p>Returns the ratio of below ground biomass to above ground biomass for the specified crop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>crop_char</strong> (<em>str</em>) – The crop type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The ratio of below ground biomass to above ground biomass or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.CropChars.get_crop_above_ground_residue_dry_matter_to_harvested_yield">
+<span class="sig-name descname"><span class="pre">get_crop_above_ground_residue_dry_matter_to_harvested_yield</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crop_char</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#CropChars.get_crop_above_ground_residue_dry_matter_to_harvested_yield"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.CropChars.get_crop_above_ground_residue_dry_matter_to_harvested_yield" title="Link to this definition"></a></dt>
+<dd><p>Returns the ratio of above ground residue dry matter to harvested yield for the specified crop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>crop_char</strong> (<em>str</em>) – The crop type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The ratio of above ground residue dry matter to harvested yield or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.CropChars.get_crop_n_content_below_ground">
+<span class="sig-name descname"><span class="pre">get_crop_n_content_below_ground</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crop_char</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#CropChars.get_crop_n_content_below_ground"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.CropChars.get_crop_n_content_below_ground" title="Link to this definition"></a></dt>
+<dd><p>Returns the nitrogen content below ground for the specified crop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>crop_char</strong> (<em>str</em>) – The crop type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The nitrogen content below ground or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.CropChars.get_crop_n_content_of_above_ground_residues">
+<span class="sig-name descname"><span class="pre">get_crop_n_content_of_above_ground_residues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crop_char</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#CropChars.get_crop_n_content_of_above_ground_residues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.CropChars.get_crop_n_content_of_above_ground_residues" title="Link to this definition"></a></dt>
+<dd><p>Returns the nitrogen content of above ground residues for the specified crop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>crop_char</strong> (<em>str</em>) – The crop type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The nitrogen content of above ground residues or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.CropChars.get_crop_slope">
+<span class="sig-name descname"><span class="pre">get_crop_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crop_char</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#CropChars.get_crop_slope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.CropChars.get_crop_slope" title="Link to this definition"></a></dt>
+<dd><p>Returns the slope of the crop for the specified crop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>crop_char</strong> (<em>str</em>) – The crop type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The slope of the crop or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.CropChars.get_crop_intercept">
+<span class="sig-name descname"><span class="pre">get_crop_intercept</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crop_char</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#CropChars.get_crop_intercept"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.CropChars.get_crop_intercept" title="Link to this definition"></a></dt>
+<dd><p>Returns the intercept of the crop for the specified crop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>crop_char</strong> (<em>str</em>) – The crop type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The intercept of the crop or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.CropChars.is_loaded">
+<span class="sig-name descname"><span class="pre">is_loaded</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#CropChars.is_loaded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.CropChars.is_loaded" title="Link to this definition"></a></dt>
+<dd><p>Returns whether the crop characteristics data has been loaded.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the data has been loaded, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">Emissions_Factors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Stores and provides access to emissions factors data.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.data_frame">
+<span class="sig-name descname"><span class="pre">data_frame</span></span><a class="headerlink" href="#crop_lca.models.Emissions_Factors.data_frame" title="Link to this definition"></a></dt>
+<dd><p>The DataFrame containing the loaded emissions factors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.emissions_factors">
+<span class="sig-name descname"><span class="pre">emissions_factors</span></span><a class="headerlink" href="#crop_lca.models.Emissions_Factors.emissions_factors" title="Link to this definition"></a></dt>
+<dd><p>A dictionary mapping emissions factor names to their values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.get_ef_emissions_factor_1_ipcc_2019">
+<span class="sig-name descname"><span class="pre">get_ef_emissions_factor_1_ipcc_2019</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.get_ef_emissions_factor_1_ipcc_2019"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.get_ef_emissions_factor_1_ipcc_2019" title="Link to this definition"></a></dt>
+<dd><p>Returns the value of the ‘ef_emissions_factor_1_ipcc_2019’ emissions factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of the emissions factor or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.get_ef_urea">
+<span class="sig-name descname"><span class="pre">get_ef_urea</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.get_ef_urea"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.get_ef_urea" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Returns the value of the ‘ef_urea’ emissions factor.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of the emissions factor or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.get_ef_urea_and_nbpt">
+<span class="sig-name descname"><span class="pre">get_ef_urea_and_nbpt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.get_ef_urea_and_nbpt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.get_ef_urea_and_nbpt" title="Link to this definition"></a></dt>
+<dd><p>Returns the value of the ‘ef_urea_and_nbpt’ emissions factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of the emissions factor or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.get_ef_fracGASF_urea_fertilisers_to_nh3_and_nox">
+<span class="sig-name descname"><span class="pre">get_ef_fracGASF_urea_fertilisers_to_nh3_and_nox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.get_ef_fracGASF_urea_fertilisers_to_nh3_and_nox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.get_ef_fracGASF_urea_fertilisers_to_nh3_and_nox" title="Link to this definition"></a></dt>
+<dd><p>Returns the value of the ‘ef_fracGASF_urea_fertilisers_to_nh3_and_nox’ emissions factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of the emissions factor or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.get_ef_fracGASF_urea_and_nbpt_to_nh3_and_nox">
+<span class="sig-name descname"><span class="pre">get_ef_fracGASF_urea_and_nbpt_to_nh3_and_nox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.get_ef_fracGASF_urea_and_nbpt_to_nh3_and_nox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.get_ef_fracGASF_urea_and_nbpt_to_nh3_and_nox" title="Link to this definition"></a></dt>
+<dd><p>Returns the value of the ‘ef_fracGASF_urea_and_nbpt_to_nh3_and_nox’ emissions factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of the emissions factor or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.get_ef_frac_leach_runoff">
+<span class="sig-name descname"><span class="pre">get_ef_frac_leach_runoff</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.get_ef_frac_leach_runoff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.get_ef_frac_leach_runoff" title="Link to this definition"></a></dt>
+<dd><p>Returns the value of the ‘ef_frac_leach_runoff’ emissions factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of the emissions factor or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.get_ef_ammonium_nitrate">
+<span class="sig-name descname"><span class="pre">get_ef_ammonium_nitrate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.get_ef_ammonium_nitrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.get_ef_ammonium_nitrate" title="Link to this definition"></a></dt>
+<dd><p>Returns the value of the ‘ef_ammonium_nitrate’ emissions factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of the emissions factor or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.get_ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox">
+<span class="sig-name descname"><span class="pre">get_ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.get_ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.get_ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox" title="Link to this definition"></a></dt>
+<dd><p>Returns the value of the ‘ef_fracGASF_ammonium_fertilisers_to_nh3_and_nox’ emissions factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of the emissions factor or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.get_ef_indirect_n2o_atmospheric_deposition_to_soils_and_water">
+<span class="sig-name descname"><span class="pre">get_ef_indirect_n2o_atmospheric_deposition_to_soils_and_water</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.get_ef_indirect_n2o_atmospheric_deposition_to_soils_and_water"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.get_ef_indirect_n2o_atmospheric_deposition_to_soils_and_water" title="Link to this definition"></a></dt>
+<dd><p>Returns the value of the ‘ef_indirect_n2o_atmospheric_deposition_to_soils_and_water’ emissions factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of the emissions factor or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.get_ef_indirect_n2o_from_leaching_and_runoff">
+<span class="sig-name descname"><span class="pre">get_ef_indirect_n2o_from_leaching_and_runoff</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.get_ef_indirect_n2o_from_leaching_and_runoff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.get_ef_indirect_n2o_from_leaching_and_runoff" title="Link to this definition"></a></dt>
+<dd><p>Returns the value of the ‘ef_indirect_n2o_from_leaching_and_runoff’ emissions factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of the emissions factor or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.get_ef_grassland_dm_t">
+<span class="sig-name descname"><span class="pre">get_ef_grassland_dm_t</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.get_ef_grassland_dm_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.get_ef_grassland_dm_t" title="Link to this definition"></a></dt>
+<dd><p>Returns the value of the ‘ef_grassland_dm_t’ emissions factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of the emissions factor or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.get_ef_dm_carbon_stock_crops">
+<span class="sig-name descname"><span class="pre">get_ef_dm_carbon_stock_crops</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.get_ef_dm_carbon_stock_crops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.get_ef_dm_carbon_stock_crops" title="Link to this definition"></a></dt>
+<dd><p>Returns the value of the ‘ef_dm_carbon_stock_crops’ emissions factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of the emissions factor or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.get_ef_Frac_P_Leach">
+<span class="sig-name descname"><span class="pre">get_ef_Frac_P_Leach</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.get_ef_Frac_P_Leach"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.get_ef_Frac_P_Leach" title="Link to this definition"></a></dt>
+<dd><p>Returns the value of the ‘ef_Frac_P_Leach’ emissions factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of the emissions factor or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Emissions_Factors.is_loaded">
+<span class="sig-name descname"><span class="pre">is_loaded</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Emissions_Factors.is_loaded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Emissions_Factors.is_loaded" title="Link to this definition"></a></dt>
+<dd><p>Returns whether the emissions factors data has been loaded.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the data has been loaded, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="crop_lca.models.Upstream">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">Upstream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Upstream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Upstream" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Stores and provides access to upstream data.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crop_lca.models.Upstream.data_frame">
+<span class="sig-name descname"><span class="pre">data_frame</span></span><a class="headerlink" href="#crop_lca.models.Upstream.data_frame" title="Link to this definition"></a></dt>
+<dd><p>The DataFrame containing the loaded upstream data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crop_lca.models.Upstream.upstream">
+<span class="sig-name descname"><span class="pre">upstream</span></span><a class="headerlink" href="#crop_lca.models.Upstream.upstream" title="Link to this definition"></a></dt>
+<dd><p>A dictionary mapping upstream types to their values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Upstream.get_upstream_fu">
+<span class="sig-name descname"><span class="pre">get_upstream_fu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">upstream_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Upstream.get_upstream_fu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Upstream.get_upstream_fu" title="Link to this definition"></a></dt>
+<dd><p>Returns the functional unit of the specified upstream type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>upstream_type</strong> (<em>str</em>) – The upstream type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The functional unit of the upstream type or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Upstream.get_upstream_kg_co2e">
+<span class="sig-name descname"><span class="pre">get_upstream_kg_co2e</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">upstream_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Upstream.get_upstream_kg_co2e"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Upstream.get_upstream_kg_co2e" title="Link to this definition"></a></dt>
+<dd><p>Returns the kg CO2e of the specified upstream type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>upstream_type</strong> (<em>str</em>) – The upstream type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The kg CO2e of the upstream type or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Upstream.get_upstream_kg_po4e">
+<span class="sig-name descname"><span class="pre">get_upstream_kg_po4e</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">upstream_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Upstream.get_upstream_kg_po4e"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Upstream.get_upstream_kg_po4e" title="Link to this definition"></a></dt>
+<dd><p>Returns the kg PO4e of the specified upstream type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>upstream_type</strong> (<em>str</em>) – The upstream type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The kg PO4e of the upstream type or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Upstream.get_upstream_kg_so2e">
+<span class="sig-name descname"><span class="pre">get_upstream_kg_so2e</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">upstream_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Upstream.get_upstream_kg_so2e"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Upstream.get_upstream_kg_so2e" title="Link to this definition"></a></dt>
+<dd><p>Returns the kg SO2e of the specified upstream type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>upstream_type</strong> (<em>str</em>) – The upstream type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The kg SO2e of the upstream type or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Upstream.get_upstream_mje">
+<span class="sig-name descname"><span class="pre">get_upstream_mje</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">upstream_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Upstream.get_upstream_mje"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Upstream.get_upstream_mje" title="Link to this definition"></a></dt>
+<dd><p>Returns the MJE of the specified upstream type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>upstream_type</strong> (<em>str</em>) – The upstream type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The MJE of the upstream type or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Upstream.get_upstream_kg_sbe">
+<span class="sig-name descname"><span class="pre">get_upstream_kg_sbe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">upstream_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Upstream.get_upstream_kg_sbe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Upstream.get_upstream_kg_sbe" title="Link to this definition"></a></dt>
+<dd><p>Returns the kg SBE of the specified upstream type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>upstream_type</strong> (<em>str</em>) – The upstream type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The kg SBE of the upstream type or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Upstream.is_loaded">
+<span class="sig-name descname"><span class="pre">is_loaded</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Upstream.is_loaded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Upstream.is_loaded" title="Link to this definition"></a></dt>
+<dd><p>Returns whether the upstream data has been loaded.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the data has been loaded, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="crop_lca.models.Fertiliser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">Fertiliser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Fertiliser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Fertiliser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Stores and provides access to fertiliser data.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crop_lca.models.Fertiliser.data_frame">
+<span class="sig-name descname"><span class="pre">data_frame</span></span><a class="headerlink" href="#crop_lca.models.Fertiliser.data_frame" title="Link to this definition"></a></dt>
+<dd><p>The DataFrame containing the loaded fertiliser data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crop_lca.models.Fertiliser.fertiliser">
+<span class="sig-name descname"><span class="pre">fertiliser</span></span><a class="headerlink" href="#crop_lca.models.Fertiliser.fertiliser" title="Link to this definition"></a></dt>
+<dd><p>A dictionary mapping crop types to their fertiliser values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Fertiliser.get_fert_kg_n_per_ha">
+<span class="sig-name descname"><span class="pre">get_fert_kg_n_per_ha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fert_crop_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Fertiliser.get_fert_kg_n_per_ha"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Fertiliser.get_fert_kg_n_per_ha" title="Link to this definition"></a></dt>
+<dd><p>Returns the kg N per hectare for a specified crop type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fert_crop_type</strong> (<em>str</em>) – The crop type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The kg N per hectare for the specified crop or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Fertiliser.get_fert_kg_p_per_ha">
+<span class="sig-name descname"><span class="pre">get_fert_kg_p_per_ha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fert_crop_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Fertiliser.get_fert_kg_p_per_ha"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Fertiliser.get_fert_kg_p_per_ha" title="Link to this definition"></a></dt>
+<dd><p>Returns the kg P per hectare for a specified crop type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fert_crop_type</strong> (<em>str</em>) – The crop type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The kg P per hectare for the specified crop or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Fertiliser.get_fert_kg_k_per_ha">
+<span class="sig-name descname"><span class="pre">get_fert_kg_k_per_ha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fert_crop_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Fertiliser.get_fert_kg_k_per_ha"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Fertiliser.get_fert_kg_k_per_ha" title="Link to this definition"></a></dt>
+<dd><p>Returns the kg K per hectare for a specified crop type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fert_crop_type</strong> (<em>str</em>) – The crop type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The kg K per hectare for the specified crop or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crop_lca.models.Fertiliser.is_loaded">
+<span class="sig-name descname"><span class="pre">is_loaded</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#Fertiliser.is_loaded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.Fertiliser.is_loaded" title="Link to this definition"></a></dt>
+<dd><p>Returns whether the fertiliser data has been loaded.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the data has been loaded, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crop_lca.models.load_crop_farm_data">
+<span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">load_crop_farm_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crop_type_dataframe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#load_crop_farm_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.load_crop_farm_data" title="Link to this definition"></a></dt>
+<dd><p>Load crop type data into a collection of CropCategory and CropCollection objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>crop_type_dataframe</strong> (<em>pandas.DataFrame</em>) – The DataFrame containing the crop type data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing the loaded crop type data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crop_lca.models.load_farm_data">
+<span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">load_farm_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">farm_data_frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#load_farm_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.load_farm_data" title="Link to this definition"></a></dt>
+<dd><p>Load farm data into a collection of Farm objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>farm_data_frame</strong> (<em>pandas.DataFrame</em>) – The DataFrame containing the farm data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing the loaded farm data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crop_lca.models.load_crop_chars_data">
+<span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">load_crop_chars_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#load_crop_chars_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.load_crop_chars_data" title="Link to this definition"></a></dt>
+<dd><p>Load crop characteristics data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An instance of the CropChars class containing the loaded crop characteristics data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#crop_lca.models.CropChars" title="crop_lca.models.CropChars">CropChars</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crop_lca.models.load_emissions_factors_data">
+<span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">load_emissions_factors_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ef_country</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#load_emissions_factors_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.load_emissions_factors_data" title="Link to this definition"></a></dt>
+<dd><p>Load emissions factors data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ef_country</strong> (<em>str</em>) – The name of the country for which the data is being loaded.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of the Emissions_Factors class containing the loaded emissions factors data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#crop_lca.models.Emissions_Factors" title="crop_lca.models.Emissions_Factors">Emissions_Factors</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crop_lca.models.load_upstream_data">
+<span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">load_upstream_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#load_upstream_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.load_upstream_data" title="Link to this definition"></a></dt>
+<dd><p>Load upstream data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An instance of the Upstream class containing the loaded upstream data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#crop_lca.models.Upstream" title="crop_lca.models.Upstream">Upstream</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crop_lca.models.load_fertiliser_data">
+<span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">load_fertiliser_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#load_fertiliser_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.load_fertiliser_data" title="Link to this definition"></a></dt>
+<dd><p>Load fertiliser data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An instance of the Fertiliser class containing the loaded fertiliser data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#crop_lca.models.Fertiliser" title="crop_lca.models.Fertiliser">Fertiliser</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crop_lca.models.print_crop_data">
+<span class="sig-prename descclassname"><span class="pre">crop_lca.models.</span></span><span class="sig-name descname"><span class="pre">print_crop_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/crop_lca/models.html#print_crop_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crop_lca.models.print_crop_data" title="Link to this definition"></a></dt>
+<dd><p>Print the crop data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – The crop data to print.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../lca/index.html" class="btn btn-neutral float-left" title="crop_lca.lca" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../national_crop_production/index.html" class="btn btn-neutral float-right" title="crop_lca.national_crop_production" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Colm Duffy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

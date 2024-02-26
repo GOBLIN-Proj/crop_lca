@@ -1,0 +1,156 @@
+:py:mod:`crop_lca.resource_manager.database_manager`
+====================================================
+
+.. py:module:: crop_lca.resource_manager.database_manager
+
+.. autoapi-nested-parse::
+
+   Database Manager
+   ================
+   This module contains the DataManager class, which is used to access the crop
+   data stored in the crop database.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   crop_lca.resource_manager.database_manager.DataManager
+
+
+
+
+.. py:class:: DataManager(ef_country=None)
+
+
+   The DataManager class is used to access the crop data stored in the crop database.
+
+   .. attribute:: database_dir
+
+      The path to the directory containing the crop database.
+
+      :type: str
+
+   .. attribute:: engine
+
+      The engine used to connect to the crop database.
+
+      :type: sqlalchemy.engine.base.Engine
+
+   .. attribute:: ef_country
+
+      The name of the country for which the data is being accessed.
+
+      :type: str
+
+   .. method:: data_engine_creater()
+
+      Returns the engine used to connect to the crop database.
+
+   .. method:: crop_char_data(index=None)
+
+      Returns the crop characteristics data.
+
+   .. method:: upstream_data(index=None)
+
+      Returns the upstream data.
+
+   .. method:: emissions_factor_data(index=None)
+
+      Returns the emissions factor data.
+
+   .. method:: fertiliser_data(index=None)
+
+      Returns the fertiliser data.
+
+   .. method:: cso_crop_data(index=None)
+
+      Returns the CSO crop production data.
+
+   .. method:: fao_production_data(ef_country, index=None)
+
+      Returns the FAO production data for the specified country.
+
+
+   .. py:method:: data_engine_creater()
+
+      Returns the engine used to connect to the crop database.
+
+      :returns: The engine used to connect to the crop database.
+      :rtype: sqlalchemy.engine.base.Engine
+
+
+   .. py:method:: crop_char_data(index=None)
+
+      Returns the crop characteristics data.
+
+      :param index: The column to use as the index for the returned dataframe.
+      :type index: str, optional
+
+      :returns: The crop characteristics data.
+      :rtype: pandas.core.frame.DataFrame
+
+
+   .. py:method:: upstream_data(index=None)
+
+      Returns the upstream data.
+
+      :param index: The column to use as the index for the returned dataframe.
+      :type index: str, optional
+
+      :returns: The upstream data.
+      :rtype: pandas.core.frame.DataFrame
+
+
+   .. py:method:: emissions_factor_data(index=None)
+
+      Returns the emissions factor data.
+
+      :param index: The column to use as the index for the returned dataframe.
+      :type index: str, optional
+
+      :returns: The emissions factor data.
+      :rtype: pandas.core.frame.DataFrame
+
+
+   .. py:method:: fertiliser_data(index=None)
+
+      Returns the fertiliser data.
+
+      :param index: The column to use as the index for the returned dataframe.
+      :type index: str, optional
+
+      :returns: The fertiliser data.
+      :rtype: pandas.core.frame.DataFrame
+
+
+   .. py:method:: cso_crop_data(index=None)
+
+      Returns the CSO crop production data.
+
+      :param index: The column to use as the index for the returned dataframe.
+      :type index: str, optional
+
+      :returns: The CSO crop production data.
+      :rtype: pandas.core.frame.DataFrame
+
+
+   .. py:method:: fao_production_data(ef_country, index=None)
+
+      Returns the FAO production data for the specified country.
+
+      :param ef_country: The name of the country for which the data is being accessed.
+      :type ef_country: str
+      :param index: The column to use as the index for the returned dataframe.
+      :type index: str, optional
+
+      :returns: The FAO production data for the specified country.
+      :rtype: pandas.core.frame.DataFrame
+
+
+

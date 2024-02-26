@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crop_lca.resource_manager.data_loader &mdash; Crop LCA 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=938c9ccc"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Crop LCA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Crop LCA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crop_lca.resource_manager.data_loader</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crop_lca.resource_manager.data_loader</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Data Loader</span>
+<span class="sd">===========</span>
+<span class="sd">This module contains the Loader class, which is used to load data from the database and create instances of the models used in the crop LCA model.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">crop_lca.resource_manager.database_manager</span> <span class="kn">import</span> <span class="n">DataManager</span>
+<span class="kn">from</span> <span class="nn">crop_lca.models</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Fertiliser</span><span class="p">,</span>
+    <span class="n">CropChars</span><span class="p">,</span>
+    <span class="n">Upstream</span><span class="p">,</span>
+    <span class="n">Emissions_Factors</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="Loader">
+<a class="viewcode-back" href="../../../autoapi/crop_lca/resource_manager/data_loader/index.html#crop_lca.resource_manager.data_loader.Loader">[docs]</a>
+<span class="k">class</span> <span class="nc">Loader</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The Loader class is used to load data from the database and create instances of the models used in the crop LCA model.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ef_country : str</span>
+<span class="sd">        The name of the country for which the data is being loaded.</span>
+<span class="sd">    dataframes : DataManager</span>
+<span class="sd">        An instance of the DataManager class used to load data from the database.</span>
+<span class="sd">    crop_chars : CropChars</span>
+<span class="sd">        An instance of the CropChars class used to manage the crop characteristics data.</span>
+<span class="sd">    fertiliser : Fertiliser</span>
+<span class="sd">        An instance of the Fertiliser class used to manage the fertiliser data.</span>
+<span class="sd">    emissions_factors : Emissions_Factors</span>
+<span class="sd">        An instance of the Emissions_Factors class used to manage the emissions factor data.</span>
+<span class="sd">    upstream : Upstream</span>
+<span class="sd">        An instance of the Upstream class used to manage the upstream data.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_crop_chars()</span>
+<span class="sd">        Returns an instance of the CropChars class.</span>
+<span class="sd">    get_fertiliser()</span>
+<span class="sd">        Returns an instance of the Fertiliser class.</span>
+<span class="sd">    get_emissions_factors()</span>
+<span class="sd">        Returns an instance of the Emissions_Factors class.</span>
+<span class="sd">    get_upstream()</span>
+<span class="sd">        Returns an instance of the Upstream class.</span>
+<span class="sd">    get_national_crop_production()</span>
+<span class="sd">        Returns the national crop production data.</span>
+<span class="sd">    get_fao_yield_data(ef_country, index=None)</span>
+<span class="sd">        Returns the FAO yield data for the specified country.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ef_country</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ef_country</span> <span class="o">=</span> <span class="n">ef_country</span> <span class="k">if</span> <span class="n">ef_country</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataframes</span> <span class="o">=</span> <span class="n">DataManager</span><span class="p">(</span><span class="n">ef_country</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crop_chars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_crop_chars</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fertiliser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fertiliser</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emissions_factors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_emissions_factors</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_upstream</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Loader.get_crop_chars">
+<a class="viewcode-back" href="../../../autoapi/crop_lca/resource_manager/data_loader/index.html#crop_lca.resource_manager.data_loader.Loader.get_crop_chars">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_crop_chars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns an instance of the CropChars class.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        CropChars</span>
+<span class="sd">            An instance of the CropChars class used to manage the crop characteristics data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">CropChars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframes</span><span class="o">.</span><span class="n">crop_char_data</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Loader.get_fertiliser">
+<a class="viewcode-back" href="../../../autoapi/crop_lca/resource_manager/data_loader/index.html#crop_lca.resource_manager.data_loader.Loader.get_fertiliser">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fertiliser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns an instance of the Fertiliser class.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Fertiliser</span>
+<span class="sd">            An instance of the Fertiliser class used to manage the fertiliser data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Fertiliser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframes</span><span class="o">.</span><span class="n">fertiliser_data</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Loader.get_emissions_factors">
+<a class="viewcode-back" href="../../../autoapi/crop_lca/resource_manager/data_loader/index.html#crop_lca.resource_manager.data_loader.Loader.get_emissions_factors">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_emissions_factors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns an instance of the Emissions_Factors class.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Emissions_Factors</span>
+<span class="sd">            An instance of the Emissions_Factors class used to manage the emissions factor data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Emissions_Factors</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframes</span><span class="o">.</span><span class="n">emissions_factor_data</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Loader.get_upstream">
+<a class="viewcode-back" href="../../../autoapi/crop_lca/resource_manager/data_loader/index.html#crop_lca.resource_manager.data_loader.Loader.get_upstream">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_upstream</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns an instance of the Upstream class.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Upstream</span>
+<span class="sd">            An instance of the Upstream class used to manage the upstream data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Upstream</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframes</span><span class="o">.</span><span class="n">upstream_data</span><span class="p">())</span></div>
+
+    
+<div class="viewcode-block" id="Loader.get_national_crop_production">
+<a class="viewcode-back" href="../../../autoapi/crop_lca/resource_manager/data_loader/index.html#crop_lca.resource_manager.data_loader.Loader.get_national_crop_production">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_national_crop_production</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the national crop production data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            The national crop production data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataframes</span><span class="o">.</span><span class="n">cso_crop_data</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="Loader.get_fao_yield_data">
+<a class="viewcode-back" href="../../../autoapi/crop_lca/resource_manager/data_loader/index.html#crop_lca.resource_manager.data_loader.Loader.get_fao_yield_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fao_yield_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ef_country</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the FAO yield data for the specified country.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ef_country : str</span>
+<span class="sd">            The name of the country for which the data is being loaded.</span>
+<span class="sd">        index : int, optional</span>
+<span class="sd">            The index of the data to be returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            The FAO yield data for the specified country.</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataframes</span><span class="o">.</span><span class="n">fao_production_data</span><span class="p">(</span><span class="n">ef_country</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Colm Duffy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
