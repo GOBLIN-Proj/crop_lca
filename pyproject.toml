@@ -13,7 +13,7 @@ numpy = "^1.25.0"
 seaborn = "^0.13.1"
 matplotlib = "^3.4.3"
 sqlalchemy = "^1.4.0"
-catchment_data_api = {git = "https://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@github.com/colmduff/catchment_data_api.git", branch = "main"}
+catchment_data_api = {git = "https://github.com/GOBLIN-Proj/catchment_data_api.git", branch = "main"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

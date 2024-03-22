@@ -1,6 +1,6 @@
 # 🌾 Crop_lca, a lifecycle assessment tool for cropping systems in Ireland
-[![license](https://img.shields.io/badge/License-MIT-red)](https://github.com/colmduff/crop_lca/blob/0.1.0/LICENSE)
-[![python](https://img.shields.io/badge/python-3.9-blue?logo=python&logoColor=white)](https://github.com/colmduff/crop_lca)
+[![license](https://img.shields.io/badge/License-MIT-red)](https://github.com/GOBLIN-Proj/crop_lca/blob/0.1.0/LICENSE)
+[![python](https://img.shields.io/badge/python-3.9-blue?logo=python&logoColor=white)](https://github.com/GOBLIN-Proj/crop_lca)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
  Based on the [GOBLIN](https://gmd.copernicus.org/articles/15/2239/2022/) (**G**eneral **O**verview for a **B**ackcasting approach of **L**ivestock **IN**tensification) LifeCycle Analysis tool, the Crop_lca module decouples this module making it an independent distribution package.
@@ -44,7 +44,7 @@ When prompted enter your ```<username>``` and password, which is your ```<access
 
 
 ```bash
-pip install "crop_lca@git+https://github.com/colmduff/crop_lca.git@main" 
+pip install "crop_lca@git+https://github.com/GOBLIN-Proj/crop_lca.git@main" 
 
 ```
 
