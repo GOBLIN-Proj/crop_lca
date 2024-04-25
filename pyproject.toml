@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "crop_lca"
-version = "0.2.0"
+version = "0.2.1"
 description = "Tier 1 Environmental Impact Assessment tool for crops."
 authors = ["Colm Duffy"]
 license = "MIT"
@@ -10,10 +10,8 @@ readme = "README.md"
 python = "^3.9"
 pandas = "2.1.4"
 numpy = "^1.25.0"
-seaborn = "^0.13.1"
-matplotlib = "^3.4.3"
 sqlalchemy = "^1.4.0"
-catchment_data_api = {git = "https://github.com/GOBLIN-Proj/catchment_data_api.git", branch = "main"}
+catchment_data_api ="^0.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

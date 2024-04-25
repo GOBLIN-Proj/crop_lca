@@ -40,6 +40,11 @@ Install from git hub.
 pip install "crop_lca@git+https://github.com/GOBLIN-Proj/crop_lca.git@main" 
 
 ```
+Install from PyPI
+
+```bash
+pip install crop_lca
+```
 
 ## Usage
 ```python
