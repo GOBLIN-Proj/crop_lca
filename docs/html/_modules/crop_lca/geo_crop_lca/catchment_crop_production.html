@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crop_lca.geo_crop_lca.catchment_crop_production &mdash; Crop LCA 0.2.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=000c92bf"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Crop LCA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../INSTALLATION.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CONTRIBUTING.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Crop LCA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crop_lca.geo_crop_lca.catchment_crop_production</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crop_lca.geo_crop_lca.catchment_crop_production</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Catchment Crop Production</span>
+<span class="sd">=========================</span>
+<span class="sd">This module contains the CatchmentCropData class which is used to generate a dataframe of catchment crops and a dataframe of scenario crops.</span>
+
+<span class="sd">In addition, the class also handles the generation of farm data (fertiliser inputs) for the crop LCA model.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">crop_lca.resource_manager.data_loader</span> <span class="kn">import</span> <span class="n">Loader</span>
+<span class="kn">from</span> <span class="nn">crop_lca.geo_crop_lca.catchment_crop_generator</span> <span class="kn">import</span> <span class="n">CatchmentCropGenerator</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
+
+<div class="viewcode-block" id="CatchmentCropData">
+<a class="viewcode-back" href="../../../autoapi/crop_lca/geo_crop_lca/catchment_crop_production/index.html#crop_lca.geo_crop_lca.catchment_crop_production.CatchmentCropData">[docs]</a>
+<span class="k">class</span> <span class="nc">CatchmentCropData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The CatchmentCropData class is used to generate a dataframe of catchment crops and a dataframe of scenario crops, as well as to generate farm data (fertiliser inputs) for the crop LCA model.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    gen_catchment_crop_production_dataframe(ef_country, catchment, year)</span>
+<span class="sd">        Returns a dataframe of catchment crops.</span>
+
+<span class="sd">    gen_scenario_crop_production_dataframe(ef_country, catchment, calibration_year, target_year, scenario= None, crop_dataframe=None)</span>
+<span class="sd">        Returns a dataframe of scenario crops.</span>
+
+<span class="sd">    gen_farm_data(crop_dataframe, urea_proportion, default_urea, default_urea_abated)</span>
+<span class="sd">        Returns a dataframe of farm data (fertiliser inputs).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CatchmentCropData.gen_catchment_crop_production_dataframe">
+<a class="viewcode-back" href="../../../autoapi/crop_lca/geo_crop_lca/catchment_crop_production/index.html#crop_lca.geo_crop_lca.catchment_crop_production.CatchmentCropData.gen_catchment_crop_production_dataframe">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">gen_catchment_crop_production_dataframe</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">ef_country</span><span class="p">,</span> <span class="n">catchment</span><span class="p">,</span> <span class="n">year</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a dataframe of catchment crops.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ef_country : str</span>
+<span class="sd">            The name of the country for which the data is being generated.</span>
+<span class="sd">        catchment : str</span>
+<span class="sd">            The name of the catchment for which the data is being generated.</span>
+<span class="sd">        year : int</span>
+<span class="sd">            The year for which the data is being generated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A dataframe of catchment crops.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">catchment_crop_generator</span> <span class="o">=</span> <span class="n">CatchmentCropGenerator</span><span class="p">(</span><span class="n">ef_country</span><span class="p">,</span> <span class="n">catchment</span><span class="p">)</span>
+        <span class="n">catchment_crops</span> <span class="o">=</span> <span class="n">catchment_crop_generator</span><span class="o">.</span><span class="n">gen_catchment_crop_dataframe</span><span class="p">()</span>
+        
+        <span class="n">data</span> <span class="o">=</span><span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">crop</span> <span class="ow">in</span> <span class="n">catchment_crops</span><span class="o">.</span><span class="n">crop_type</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            
+            <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;ef_country&quot;</span><span class="p">:</span> <span class="n">ef_country</span><span class="p">,</span>
+                <span class="s2">&quot;farm_id&quot;</span><span class="p">:</span> <span class="n">year</span><span class="p">,</span>
+                <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="n">year</span><span class="p">,</span>
+                <span class="s2">&quot;crop_type&quot;</span><span class="p">:</span> <span class="n">catchment_crops</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">catchment_crops</span><span class="p">[</span><span class="s2">&quot;crop_type&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">crop</span><span class="p">,</span> <span class="s2">&quot;param_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+                <span class="s2">&quot;lucas_crop_type&quot;</span><span class="p">:</span> <span class="n">crop</span><span class="p">,</span>
+                <span class="s2">&quot;kg_dm_per_ha&quot;</span><span class="p">:</span> <span class="n">catchment_crops</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">catchment_crops</span><span class="p">[</span><span class="s2">&quot;crop_type&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">crop</span><span class="p">,</span> <span class="s2">&quot;kg_dm_per_ha&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+                <span class="s2">&quot;area&quot;</span><span class="p">:</span> <span class="n">catchment_crops</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">catchment_crops</span><span class="p">[</span><span class="s2">&quot;crop_type&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">crop</span><span class="p">,</span> <span class="s2">&quot;area_ha&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="p">}</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+    
+
+<div class="viewcode-block" id="CatchmentCropData.gen_scenario_crop_production_dataframe">
+<a class="viewcode-back" href="../../../autoapi/crop_lca/geo_crop_lca/catchment_crop_production/index.html#crop_lca.geo_crop_lca.catchment_crop_production.CatchmentCropData.gen_scenario_crop_production_dataframe">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">gen_scenario_crop_production_dataframe</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="n">ef_country</span><span class="p">,</span><span class="n">catchment</span><span class="p">,</span> <span class="n">calibration_year</span><span class="p">,</span> <span class="n">target_year</span><span class="p">,</span> <span class="n">scenario</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">crop_dataframe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a dataframe of scenario crops.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ef_country : str</span>
+<span class="sd">            The name of the country for which the data is being generated.</span>
+<span class="sd">        catchment : str</span>
+<span class="sd">            The name of the catchment for which the data is being generated.</span>
+<span class="sd">        calibration_year : int</span>
+<span class="sd">            The year for which the calibration data is being generated.</span>
+<span class="sd">        target_year : int</span>
+<span class="sd">            The year for which the scenario data is being generated.</span>
+<span class="sd">        scenario : int, optional</span>
+<span class="sd">            The scenario for which the data is being generated. The default is None.</span>
+<span class="sd">        crop_dataframe : pandas.DataFrame, optional</span>
+<span class="sd">            A dataframe of crop data. The default is None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A dataframe of scenario crops.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">catchment_crop_generator</span> <span class="o">=</span> <span class="n">CatchmentCropGenerator</span><span class="p">(</span><span class="n">ef_country</span><span class="p">,</span> <span class="n">catchment</span><span class="p">)</span>
+        <span class="n">catchment_crops</span> <span class="o">=</span> <span class="n">catchment_crop_generator</span><span class="o">.</span><span class="n">gen_catchment_crop_dataframe</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">crop_dataframe</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">catchment_crop_df</span> <span class="o">=</span> <span class="n">CatchmentCropData</span><span class="o">.</span><span class="n">gen_catchment_crop_production_dataframe</span><span class="p">(</span><span class="n">ef_country</span><span class="p">,</span><span class="n">catchment</span><span class="p">,</span> <span class="n">calibration_year</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">catchment_crop_df</span> <span class="o">=</span> <span class="n">crop_dataframe</span>
+        
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">crop</span> <span class="ow">in</span> <span class="n">catchment_crops</span><span class="o">.</span><span class="n">crop_type</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            
+            <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;ef_country&quot;</span><span class="p">:</span> <span class="n">ef_country</span><span class="p">,</span>
+                <span class="s2">&quot;farm_id&quot;</span><span class="p">:</span> <span class="n">scenario</span><span class="p">,</span>
+                <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="n">target_year</span><span class="p">,</span>
+                <span class="s2">&quot;crop_type&quot;</span><span class="p">:</span> <span class="n">catchment_crops</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">catchment_crops</span><span class="p">[</span><span class="s2">&quot;crop_type&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">crop</span><span class="p">,</span> <span class="s2">&quot;param_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+                <span class="s2">&quot;lucas_crop_type&quot;</span><span class="p">:</span> <span class="n">crop</span><span class="p">,</span>
+                <span class="s2">&quot;kg_dm_per_ha&quot;</span><span class="p">:</span> <span class="n">catchment_crops</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">catchment_crops</span><span class="p">[</span><span class="s2">&quot;crop_type&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">crop</span><span class="p">,</span> <span class="s2">&quot;kg_dm_per_ha&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+                <span class="s2">&quot;area&quot;</span><span class="p">:</span> <span class="n">catchment_crops</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">catchment_crops</span><span class="p">[</span><span class="s2">&quot;crop_type&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">crop</span><span class="p">,</span> <span class="s2">&quot;area_ha&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="p">}</span>
+            
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        
+        <span class="n">scenario_crop_dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">catchment_crop_df</span><span class="p">,</span> <span class="n">scenario_crop_dataframe</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> </div>
+
+
+<div class="viewcode-block" id="CatchmentCropData.gen_farm_data">
+<a class="viewcode-back" href="../../../autoapi/crop_lca/geo_crop_lca/catchment_crop_production/index.html#crop_lca.geo_crop_lca.catchment_crop_production.CatchmentCropData.gen_farm_data">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">gen_farm_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">crop_dataframe</span><span class="p">,</span> <span class="n">urea_proportion</span><span class="p">,</span> <span class="n">default_urea</span><span class="p">,</span> <span class="n">default_urea_abated</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a dataframe of farm data (fertiliser inputs).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        crop_dataframe : pandas.DataFrame</span>
+<span class="sd">            A dataframe of crop data.</span>
+
+<span class="sd">        urea_proportion : pandas.DataFrame</span>
+<span class="sd">            A dataframe of urea proportions.</span>
+
+<span class="sd">        default_urea : float</span>
+<span class="sd">            The default urea proportion.</span>
+
+<span class="sd">        default_urea_abated : float</span>
+<span class="sd">            The default urea abated proportion.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A dataframe of farm data (fertiliser inputs).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loader_class</span> <span class="o">=</span> <span class="n">Loader</span><span class="p">()</span>
+
+        <span class="n">application_rate</span> <span class="o">=</span> <span class="n">loader_class</span><span class="o">.</span><span class="n">get_fertiliser</span><span class="p">()</span>
+
+
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;ef_country&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;farm_id&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;total_urea&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;total_urea_abated&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;total_n_fert&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;total_p_fert&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;total_k_fert&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="n">farm_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+
+        
+        <span class="k">for</span> <span class="n">sc</span> <span class="ow">in</span> <span class="n">crop_dataframe</span><span class="o">.</span><span class="n">farm_id</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="n">farm_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;ef_country&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ireland&quot;</span>
+            <span class="n">farm_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;farm_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span>
+
+            <span class="n">farm_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;total_urea&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">farm_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;total_urea_abated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">farm_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;total_n_fert&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">farm_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;total_p_fert&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">farm_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;total_k_fert&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="k">for</span> <span class="n">crop</span> <span class="ow">in</span> <span class="n">crop_dataframe</span><span class="o">.</span><span class="n">lucas_crop_type</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">urea_value</span> <span class="o">=</span> <span class="n">urea_proportion</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;Urea proportion&quot;</span><span class="p">]</span>
+
+                    <span class="n">urea_abated_value</span> <span class="o">=</span> <span class="n">urea_proportion</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;Urea abated proportion&quot;</span><span class="p">]</span>
+                
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="n">urea_value</span> <span class="o">=</span> <span class="n">default_urea</span>
+                    <span class="n">urea_abated_value</span> <span class="o">=</span> <span class="n">default_urea_abated</span>
+
+
+                <span class="n">mask</span> <span class="o">=</span> <span class="p">((</span><span class="n">crop_dataframe</span><span class="p">[</span><span class="s2">&quot;farm_id&quot;</span><span class="p">]</span><span class="o">==</span> <span class="n">sc</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">crop_dataframe</span><span class="p">[</span><span class="s2">&quot;lucas_crop_type&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">crop</span><span class="p">))</span>
+
+                <span class="n">farm_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;total_urea&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">crop_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s2">&quot;area&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span><span class="p">(</span><span class="n">application_rate</span><span class="o">.</span><span class="n">get_fert_kg_n_per_ha</span><span class="p">(</span><span class="n">crop</span><span class="p">)</span>
+                        <span class="o">*</span> <span class="n">urea_value</span><span class="p">)</span>
+
+                <span class="n">farm_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;total_urea_abated&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">crop_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s2">&quot;area&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">crop_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s2">&quot;area&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">application_rate</span><span class="o">.</span><span class="n">get_fert_kg_n_per_ha</span><span class="p">(</span><span class="n">crop</span><span class="p">)</span>
+                        <span class="o">*</span> <span class="n">urea_value</span> <span class="o">*</span> <span class="n">urea_abated_value</span><span class="p">))</span>
+
+                <span class="n">farm_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;total_n_fert&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">crop_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s2">&quot;area&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span><span class="p">(</span><span class="n">application_rate</span><span class="o">.</span><span class="n">get_fert_kg_n_per_ha</span><span class="p">(</span><span class="n">crop</span><span class="p">)</span>
+                        <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span><span class="n">urea_value</span><span class="p">))</span>
+                
+                <span class="n">farm_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;total_p_fert&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">crop_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s2">&quot;area&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="n">application_rate</span><span class="o">.</span><span class="n">get_fert_kg_p_per_ha</span><span class="p">(</span><span class="n">crop</span><span class="p">)</span>
+                <span class="n">farm_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="s2">&quot;total_k_fert&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">crop_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s2">&quot;area&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="n">application_rate</span><span class="o">.</span><span class="n">get_fert_kg_k_per_ha</span><span class="p">(</span><span class="n">crop</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">farm_data</span></div>
+</div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Colm Duffy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

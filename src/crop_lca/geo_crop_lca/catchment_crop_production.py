@@ -168,7 +168,7 @@ class CatchmentCropData:
             farm_data.at[sc, "total_p_fert"] = 0
             farm_data.at[sc, "total_k_fert"] = 0
 
-            for crop in crop_dataframe.crop_type.unique():
+            for crop in crop_dataframe.lucas_crop_type.unique():
 
                 try:
                     urea_value = urea_proportion.at[sc, "Urea proportion"]
@@ -180,7 +180,7 @@ class CatchmentCropData:
                     urea_abated_value = default_urea_abated
 
 
-                mask = ((crop_dataframe["farm_id"]== sc) & (crop_dataframe["crop_type"]==crop))
+                mask = ((crop_dataframe["farm_id"]== sc) & (crop_dataframe["lucas_crop_type"]==crop))
 
                 farm_data.at[sc, "total_urea"] += crop_dataframe.loc[mask, "area"].item() *(application_rate.get_fert_kg_n_per_ha(crop)
                         * urea_value)
